@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
+const noReferrer = [{ key: "Referrer-Policy", value: "no-referrer" }];
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  allowedDevOrigins: ["10.46.186.135"],
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
@@ -11,6 +13,12 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  async headers() {
+    return [
+      { source: "/referral/:path*", headers: noReferrer },
+      { source: "/access/:path*", headers: noReferrer },
+    ];
   },
 };
 
