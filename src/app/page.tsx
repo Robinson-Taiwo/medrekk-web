@@ -297,6 +297,17 @@ export default function Home() {
                   Emergency lookup
                 </ButtonLink>
               </div>
+              <p className="mx-auto mt-6 text-[13px] text-white/60">
+                Clinicians:{" "}
+                <Link href="/signup" className="font-medium text-primary-soft underline underline-offset-2">
+                  create an account
+                </Link>{" "}
+                or{" "}
+                <Link href="/login" className="font-medium text-primary-soft underline underline-offset-2">
+                  sign in
+                </Link>
+                . Reading an approved record needs neither.
+              </p>
             </div>
           </Shell>
         </section>

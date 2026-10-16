@@ -144,14 +144,19 @@ export default function ForProviders() {
 
         <section className="py-14 lg:py-20">
           <Shell>
-            <SectionHeading className="text-ink">Getting verified</SectionHeading>
+            <SectionHeading className="text-ink">Getting started</SectionHeading>
             <Body className="mt-4">
-              Requesting access requires a verified health-worker account, so that a patient
-              approving a request knows the name in front of them was checked by somebody. Sign in
-              to begin, or ask your facility administrator to register you.
+              Register yourself — it takes a minute and needs no administrator. You can request
+              access to a record straight away, and the patient sees your name and facility when
+              deciding. Marking an entry as clinically confirmed is the one thing that waits until
+              your credentials are approved, so an unapproved account can never make something look
+              more authoritative than it is.
             </Body>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/login" size="lg">
+              <ButtonLink href="/signup" size="lg">
+                Create an account
+              </ButtonLink>
+              <ButtonLink href="/login" variant="secondary" size="lg">
                 Sign in
               </ButtonLink>
               <ButtonLink href="/access" variant="secondary" size="lg">

@@ -6,7 +6,6 @@ import { ButtonLink, Display, Eyebrow, Lead, Shell } from "./ui";
 const NAV = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/for-providers", label: "For providers" },
-  { href: "/privacy", label: "Privacy" },
 ] as const;
 
 /**
@@ -35,6 +34,9 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ButtonLink href="/login" variant="ghost" className="hidden shrink-0 sm:inline-flex">
+            Sign in
+          </ButtonLink>
           <ButtonLink href="/access" variant="primary" className="shrink-0">
             Access a record
           </ButtonLink>
@@ -87,6 +89,9 @@ export function SiteFooter() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink">Clinicians</p>
             <Link href="/login" className="text-[13px] text-muted hover:text-ink">
               Sign in
+            </Link>
+            <Link href="/signup" className="text-[13px] text-muted hover:text-ink">
+              Create an account
             </Link>
           </nav>
         </div>
