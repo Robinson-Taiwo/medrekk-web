@@ -1,26 +1,107 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/**
+ * The MedRekk palette. These values are the same ones the mobile app's tailwind.config.js
+ * defines, so the app and the site are one product rather than two that resemble each other.
+ * Change a colour here and in that file together.
+ *
+ * Three were corrected on the way over, because the originals sat below the WCAG AA contrast
+ * floor and this is a health product:
+ *   muted   #64748B -> #5D6C82   (was 4.33:1 on fill, 4.50:1 on canvas; now 4.55:1 at worst)
+ *   danger  #D94848 -> #CE2B2B   (was 4.22:1 as text and 4.22:1 under a white label; now 5.24:1)
+ * and a disabled button is now track + muted rather than dim + white, which was 1.48:1.
+ */
+@theme {
+  --color-ink: #142d2a;
+  --color-primary: #0f6e56;
+  --color-primary-deep: #0c5a47;
+  --color-primary-soft: #d9f0e7;
+  --color-surface: #ffffff;
+  --color-canvas: #f7f9f7;
+  --color-line: #e2e8e4;
+  --color-muted: #5d6c82;
+  --color-fill: #f1f5f3;
+  --color-track: #e9eeeb;
+  --color-warn: #b45309;
+  --color-warn-soft: #fef3e2;
+  --color-danger: #ce2b2b;
+  --color-danger-soft: #fbeaea;
+  --color-neutral-soft: #eef1f4;
+  --color-dim: #cbd5e1;
+
+  /* Manrope for headings and Inter for body: the two faces the mobile app already uses. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-manrope), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+/**
+ * Deliberately one palette, with no prefers-color-scheme block.
+ *
+ * The boilerplate this file replaced flipped the body to #0a0a0a whenever the *viewer's*
+ * machine was in dark mode, while every page painted gray-900 text on top of it. Someone
+ * else may be demonstrating this on a laptop whose theme we do not control, so the site
+ * renders the same everywhere instead. color-scheme is pinned too: without it the browser
+ * still renders native inputs, scrollbars and autofill dark on a dark-mode machine.
+ */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.021em;
+    text-wrap: balance;
+  }
+
+  /* Long measures are hard to read; headings are the exception that wants balancing. */
+  p {
+    text-wrap: pretty;
+  }
+
+  /**
+   * A visible focus ring, on the keyboard path only. Removing it is the single most common
+   * accessibility regression on a site like this, so it is defined once, here.
+   */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-soft);
+    color: var(--color-ink);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
