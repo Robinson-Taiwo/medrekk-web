@@ -29,6 +29,26 @@
   --color-neutral-soft: #eef1f4;
   --color-dim: #cbd5e1;
 
+  /*
+   * The night surface, used by the marketing and account pages.
+   *
+   * The canvas is the brand ink pushed darker rather than a generic near-black, so the site
+   * reads as MedRekk in the dark instead of as every other dark landing page.
+   *
+   * The brand green cannot come along. #0F6E56 scores 2.88:1 on this canvas, which is not
+   * text — so the accent is a lifted version of it at 7.56:1, and because white on that
+   * accent is only 2.36:1 while ink on it is 7.56:1, a primary button here is bright green
+   * with dark type rather than the other way round.
+   */
+  --color-night: #0b1a17;
+  --color-night-panel: #122621;
+  --color-mist: #f2f7f4;
+  --color-mist-dim: #9fb3ab;
+  --color-mist-faint: #7c9289;
+  --color-glow: #2fbe8f;
+  --color-glow-deep: #1e8e69;
+  --color-glow-ink: #06120f;
+
   /* Manrope for headings and Inter for body: the two faces the mobile app already uses. */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: var(--font-manrope), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -162,5 +182,106 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * The night surface
+ * ------------------------------------------------------------------ */
+
+/**
+ * Film grain. A flat dark page looks like a flat dark page; a little noise over it reads as
+ * a surface. Kept at a few percent — enough to feel, not enough to see — and fixed to the
+ * viewport so it does not crawl while the page scrolls.
+ */
+.night {
+  position: relative;
+  background-color: var(--color-night);
+  color: var(--color-mist);
+  isolation: isolate;
+}
+
+.night::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/**
+ * The light behind the hero. One large, very soft radial in the brand green, drifting slowly
+ * so the page is never completely still. It sits beneath everything and ignores the pointer.
+ */
+.aura {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 9999px;
+  filter: blur(72px);
+  opacity: 0.5;
+  background: radial-gradient(circle at center, var(--color-glow) 0%, rgba(47, 190, 143, 0.18) 45%, transparent 70%);
+  animation: aura-drift 18s ease-in-out infinite;
+}
+
+@keyframes aura-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) scale(1.06);
+    opacity: 0.6;
+  }
+}
+
+/** A panel that catches the light: faint fill, hairline edge, and a highlight on the top edge. */
+.glass {
+  background-color: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 24px 60px -32px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+/** A rule that is brightest in the middle and gone at both ends. */
+.hairline {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
+}
+
+/**
+ * Enters once, on the way in. The curve overshoots slightly before settling, which is what
+ * makes it feel sprung rather than linear. Nothing re-animates on the way back up: motion
+ * that repeats every time a section passes the fold is noise.
+ */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.34, 1.4, 0.44, 1);
+}
+
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aura {
+    animation: none;
+  }
+
+  /* Never leave content stranded at opacity 0 if the observer has not fired. */
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
