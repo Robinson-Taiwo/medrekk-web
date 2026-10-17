@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { api } from "@/lib/api";
 import { setAuth, type WebUser } from "@/lib/auth";
-import { Button, Field, Notice } from "@/components/ui";
+import { NightButton, NightField, NightNotice } from "@/components/night";
 
 interface AuthResponse {
   token: string;
@@ -58,7 +58,7 @@ export default function SignUpForm() {
 
   return (
     <form onSubmit={(e) => void submit(e)} className="grid gap-4">
-      <Field
+      <NightField
         id="fullName"
         label="Your name"
         value={fullName}
@@ -68,7 +68,7 @@ export default function SignUpForm() {
         autoComplete="name"
         placeholder="Amina Bello"
       />
-      <Field
+      <NightField
         id="facility"
         label="Where you practise"
         hint="Shown to the patient when you ask for access, so they can see who is asking."
@@ -77,7 +77,7 @@ export default function SignUpForm() {
         autoComplete="organization"
         placeholder="Ilorin General Hospital"
       />
-      <Field
+      <NightField
         id="email"
         label="Email"
         type="email"
@@ -86,7 +86,7 @@ export default function SignUpForm() {
         required
         autoComplete="email"
       />
-      <Field
+      <NightField
         id="phone"
         label="Phone"
         hint="Optional."
@@ -96,7 +96,7 @@ export default function SignUpForm() {
         autoComplete="tel"
         placeholder="08031234567"
       />
-      <Field
+      <NightField
         id="password"
         label="Password"
         hint="At least 8 characters."
@@ -108,15 +108,15 @@ export default function SignUpForm() {
         autoComplete="new-password"
       />
 
-      {error ? <Notice tone="danger">{error}</Notice> : null}
+      {error ? <NightNotice tone="danger">{error}</NightNotice> : null}
 
-      <Button type="submit" size="lg" disabled={busy}>
+      <NightButton type="submit" size="lg" disabled={busy}>
         {busy ? "Creating your account…" : "Create account"}
-      </Button>
+      </NightButton>
 
-      <p className="text-[13px] text-muted">
+      <p className="text-[13px] text-mist-faint">
         Already registered?{" "}
-        <Link href="/login" className="font-medium text-primary underline underline-offset-2">
+        <Link href="/login" className="font-medium text-glow underline underline-offset-4">
           Sign in
         </Link>
         .

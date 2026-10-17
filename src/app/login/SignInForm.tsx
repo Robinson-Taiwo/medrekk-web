@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import { api } from "@/lib/api";
 import { clearAuth, getAuth, setAuth, type StoredAuth, type WebUser } from "@/lib/auth";
-import { Button, ButtonLink, Field, Notice } from "@/components/ui";
+import { NightButton, NightField, NightLink, NightNotice } from "@/components/night";
 
 interface LoginResponse {
   token: string;
@@ -50,18 +50,18 @@ export default function SignInForm() {
   if (current) {
     return (
       <div className="grid gap-5">
-        <div className="rounded-xl border border-line bg-surface p-4">
-          <p className="text-[15px] font-semibold text-ink">{current.user.fullName}</p>
-          <p className="mt-0.5 text-[13px] text-muted">
+        <div className="glass rounded-xl p-4">
+          <p className="text-[15px] font-semibold text-mist">{current.user.fullName}</p>
+          <p className="mt-0.5 text-[13px] text-mist-faint">
             {current.user.facility ?? "No facility on your account"}
           </p>
         </div>
         <div className="flex flex-wrap gap-2.5">
-          <ButtonLink href="/access" size="lg">
+          <NightLink href="/access" size="lg">
             Look up a record
-          </ButtonLink>
-          <Button
-            variant="secondary"
+          </NightLink>
+          <NightButton
+            variant="ghost"
             size="lg"
             onClick={() => {
               clearAuth();
@@ -69,7 +69,7 @@ export default function SignInForm() {
             }}
           >
             Sign out
-          </Button>
+          </NightButton>
         </div>
       </div>
     );
@@ -77,7 +77,7 @@ export default function SignInForm() {
 
   return (
     <form onSubmit={(e) => void submit(e)} className="grid gap-4">
-      <Field
+      <NightField
         id="email"
         label="Email"
         type="email"
@@ -86,7 +86,7 @@ export default function SignInForm() {
         required
         autoComplete="email"
       />
-      <Field
+      <NightField
         id="password"
         label="Password"
         type="password"
@@ -96,15 +96,15 @@ export default function SignInForm() {
         autoComplete="current-password"
       />
 
-      {error ? <Notice tone="danger">{error}</Notice> : null}
+      {error ? <NightNotice tone="danger">{error}</NightNotice> : null}
 
-      <Button type="submit" size="lg" disabled={busy}>
+      <NightButton type="submit" size="lg" disabled={busy}>
         {busy ? "Signing in…" : "Sign in"}
-      </Button>
+      </NightButton>
 
-      <p className="text-[13px] text-muted">
+      <p className="text-[13px] text-mist-faint">
         No account yet?{" "}
-        <Link href="/signup" className="font-medium text-primary underline underline-offset-2">
+        <Link href="/signup" className="font-medium text-glow underline underline-offset-4">
           Create one
         </Link>
         .

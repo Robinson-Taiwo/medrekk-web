@@ -1,31 +1,32 @@
-import { SiteFooter, SiteHeader } from "@/components/chrome";
-import { Body, SectionHeading, Shell } from "@/components/ui";
+import { NightFooter, NightHeader } from "@/components/night-chrome";
+import { Aura, Body, Heading, NightShell, Wrap } from "@/components/night";
 import SignInForm from "./SignInForm";
 
 export const metadata = {
   title: "Health worker sign in",
-  description: "Sign in to confirm information inside a record a patient has approved.",
+  description: "Sign in to add to a record a patient has approved, and confirm what is in one.",
 };
 
 export default function LoginPage() {
   return (
-    <>
-      <SiteHeader />
-      <main className="flex-1 py-14 lg:py-20">
-        <Shell>
-          <div className="mx-auto w-full max-w-[480px]">
-          <SectionHeading className="text-ink">Health worker sign in</SectionHeading>
-          <Body className="mt-3">
-            Signing in lets you add to a record a patient has approved, and confirm what is already in it. You do not
-            need an account to read a record you have been given access to.
-          </Body>
-          <div className="mt-8">
-            <SignInForm />
+    <NightShell>
+      <NightHeader />
+      <main className="relative flex-1 overflow-hidden py-20 lg:py-28">
+        <Aura className="left-1/2 top-[-6rem] h-[22rem] w-[34rem] -translate-x-1/2 opacity-40" />
+        <Wrap className="relative">
+          <div className="mx-auto w-full max-w-[440px]">
+            <Heading>Health worker sign in</Heading>
+            <Body className="mt-4">
+              Signing in lets you add to a record a patient has approved, and confirm what is
+              already in it. Reading a record you have been given access to needs no account.
+            </Body>
+            <div className="mt-9">
+              <SignInForm />
+            </div>
           </div>
-          </div>
-        </Shell>
+        </Wrap>
       </main>
-      <SiteFooter />
-    </>
+      <NightFooter />
+    </NightShell>
   );
 }

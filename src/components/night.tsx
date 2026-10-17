@@ -92,33 +92,89 @@ export function Body({ children, className = "" }: { children: ReactNode; classN
 }
 
 type Variant = "accent" | "ghost";
+type Size = "md" | "lg";
 
 /**
  * The accent button carries dark type on bright green. White on this green measures 2.36:1
  * and would be unreadable; ink on it is 7.56:1.
  */
-function buttonSkin(variant: Variant, extra: string): string {
+function buttonSkin(variant: Variant, size: Size, extra: string): string {
   const base =
-    "inline-flex h-11 items-center justify-center gap-2 rounded-xl px-5 text-[15px] font-medium transition-[transform,background-color,border-color] duration-150 active:scale-[0.985] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100";
+    "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-[transform,background-color,border-color] duration-150 active:scale-[0.985] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100";
+  const box = size === "lg" ? "h-[52px] px-6 text-base" : "h-11 px-5 text-[15px]";
   const skin =
     variant === "accent"
       ? "bg-glow text-glow-ink hover:bg-[#3ad3a0]"
       : "border border-white/12 bg-white/[0.04] text-mist hover:bg-white/[0.08]";
-  return `${base} ${skin} ${extra}`;
+  return `${base} ${box} ${skin} ${extra}`;
 }
 
 export function NightButton({
   variant = "accent",
+  size = "md",
   className = "",
   ...rest
-}: ComponentProps<"button"> & { variant?: Variant }) {
-  return <button className={buttonSkin(variant, className)} {...rest} />;
+}: ComponentProps<"button"> & { variant?: Variant; size?: Size }) {
+  return <button className={buttonSkin(variant, size, className)} {...rest} />;
 }
 
 export function NightLink({
   variant = "accent",
+  size = "md",
   className = "",
   ...rest
-}: ComponentProps<typeof Link> & { variant?: Variant }) {
-  return <Link className={buttonSkin(variant, className)} {...rest} />;
+}: ComponentProps<typeof Link> & { variant?: Variant; size?: Size }) {
+  return <Link className={buttonSkin(variant, size, className)} {...rest} />;
+}
+
+/** A labelled input on the night surface. The label is always rendered, never a placeholder. */
+export function NightField({
+  label,
+  hint,
+  id,
+  className = "",
+  ...rest
+}: ComponentProps<"input"> & { label: string; hint?: string; id: string }) {
+  return (
+    <div className="grid gap-1.5">
+      <label htmlFor={id} className="text-[13px] font-medium text-mist">
+        {label}
+      </label>
+      <input
+        id={id}
+        aria-describedby={hint ? `${id}-hint` : undefined}
+        className={`h-12 rounded-xl border border-white/[0.1] bg-white/[0.04] px-3.5 text-[15px] text-mist outline-none transition-colors placeholder:text-mist-faint/70 focus:border-glow/50 focus:bg-white/[0.06] ${className}`}
+        {...rest}
+      />
+      {hint ? (
+        <p id={`${id}-hint`} className="text-xs leading-[17px] text-mist-faint">
+          {hint}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+export function NightNotice({
+  tone = "neutral",
+  title,
+  children,
+}: {
+  tone?: "neutral" | "pending" | "danger";
+  title?: string;
+  children: ReactNode;
+}) {
+  const skin = {
+    neutral: "border-white/[0.08] bg-white/[0.03]",
+    pending: "border-amber-400/20 bg-amber-400/[0.07]",
+    danger: "border-rose-400/25 bg-rose-400/[0.08]",
+  }[tone];
+  return (
+    <div className={`rounded-xl border p-4 ${skin}`}>
+      {title ? <p className="text-[15px] font-semibold text-mist">{title}</p> : null}
+      <div className={`text-[14px] leading-[1.6] text-mist-dim ${title ? "mt-1.5" : ""}`}>
+        {children}
+      </div>
+    </div>
+  );
 }

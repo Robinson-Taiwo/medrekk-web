@@ -14,6 +14,7 @@ import {
 } from "@/components/night";
 import { Reveal } from "@/components/reveal";
 import { HeroSurface, OfflineCapture, PillarIcon } from "@/components/illustration";
+import { AccessRequestScreen, HomeScreen, Phone, VisitScreen } from "@/components/phone";
 
 const PILLARS = [
   {
@@ -140,6 +141,30 @@ export default function Home() {
             <Reveal delay={120} className="flex justify-center lg:justify-end">
               <OfflineCapture />
             </Reveal>
+          </Wrap>
+        </section>
+
+        {/* ---------------- The app itself ---------------- */}
+        <section className="border-t border-white/[0.07] py-20 lg:py-24">
+          <Wrap>
+            <Reveal>
+              <Heading className="max-w-[18ch]">This is the whole app.</Heading>
+              <Body className="mt-5">
+                Three screens carry it: what you hold, who is asking, and what a visit became.
+              </Body>
+            </Reveal>
+
+            <div className="mt-14 flex flex-wrap items-start justify-center gap-8 lg:gap-10">
+              {[
+                { screen: <HomeScreen key="h" />, caption: "What the patient holds" },
+                { screen: <AccessRequestScreen key="a" />, caption: "Someone is asking" },
+                { screen: <VisitScreen key="v" />, caption: "What the visit became" },
+              ].map((item, index) => (
+                <Reveal key={item.caption} delay={index * 100}>
+                  <Phone caption={item.caption}>{item.screen}</Phone>
+                </Reveal>
+              ))}
+            </div>
           </Wrap>
         </section>
 
