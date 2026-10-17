@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Mark } from "@/components/brand";
+import { AccessLifecycle, OfflineCapture, PillarIcon } from "@/components/illustration";
 import { SiteFooter, SiteHeader } from "@/components/chrome";
 import {
   Body,
@@ -18,66 +19,21 @@ import {
  * card uses. It is the real screen rather than an illustration of one, which is both honest
  * and the fastest way to show somebody what the product is.
  */
-function PassportCard() {
-  return (
-    <div className="w-full max-w-[380px] rounded-[22px] bg-ink p-5 shadow-[0_24px_60px_-28px_rgba(20,45,42,0.55)]">
-      <div className="flex items-center justify-between">
-        <p className="text-xs font-medium text-white/70">Health passport</p>
-        <div className="flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary-soft" />
-          <p className="text-xs text-white/80">Available offline</p>
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-end justify-between gap-4">
-        <div>
-          <p className="text-xs text-white/60">MedRekk code</p>
-          <p className="mt-1 font-mono text-[26px] font-semibold tracking-[0.18em] text-white">
-            MR-4K7Q
-          </p>
-        </div>
-        <span className="flex h-9 items-center gap-1.5 rounded-[10px] bg-surface px-3 text-[13px] font-medium text-ink">
-          Show QR
-        </span>
-      </div>
-
-      <dl className="mt-4 grid grid-cols-3 gap-2">
-        {[
-          ["Blood group", "O+"],
-          ["Allergies", "1"],
-          ["Conditions", "2"],
-        ].map(([label, value]) => (
-          <div key={label} className="rounded-[10px] bg-white/10 px-2.5 py-2">
-            <dt className="text-[11px] text-white/60">{label}</dt>
-            <dd className="text-base font-semibold text-white">{value}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <div className="mt-3 rounded-[10px] border border-white/10 bg-white/[0.06] p-3">
-        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-white/50">
-          Who can see this
-        </p>
-        <p className="mt-1.5 text-[13px] leading-[19px] text-white/80">
-          Dr A. Bello · Ilorin General — <span className="text-primary-soft">2h 40m left</span>
-        </p>
-      </div>
-    </div>
-  );
-}
-
 const PILLARS = [
   {
+    icon: "offline" as const,
     title: "It works with no connection",
-    body: "The record lives on the patient's phone. Clinics with intermittent power and no reliable network can still read and add to it, and the changes reconcile when a connection returns.",
+    body: "The record lives on the patient's phone, and a clinic with no network can still read and add to it.",
   },
   {
+    icon: "approval" as const,
     title: "The patient approves each time",
-    body: "A provider requests the areas they need. The patient sees who is asking, from where, and for how long, then approves or declines. Access expires on its own and can be revoked early.",
+    body: "They see who is asking, from where, and for how long. Access ends on its own.",
   },
   {
+    icon: "log" as const,
     title: "Every look is written down",
-    body: "Each time the record is opened — in a clinic, by QR in an emergency, or over a dialled code — it is added to an access log only the patient can read.",
+    body: "Each time the record is opened it joins an access log only the patient can read.",
   },
 ];
 
@@ -142,7 +98,7 @@ export default function Home() {
           </div>
 
           <div className="flex justify-center lg:justify-end">
-            <PassportCard />
+            <AccessLifecycle />
           </div>
         </Shell>
 
@@ -160,7 +116,7 @@ export default function Home() {
             <ul className="mt-10 grid gap-6 md:grid-cols-3">
               {PILLARS.map((pillar) => (
                 <Card as="li" key={pillar.title} className="p-6">
-                  <Mark className="h-6 w-6 text-primary" />
+                  <PillarIcon name={pillar.icon} />
                   <h3 className="mt-4 font-display text-[18px] font-bold leading-snug text-ink">
                     {pillar.title}
                   </h3>
@@ -168,6 +124,36 @@ export default function Home() {
                 </Card>
               ))}
             </ul>
+          </Shell>
+        </section>
+
+        {/* ---------- Offline, shown rather than claimed ---------- */}
+        <section className="border-y border-line bg-surface py-16 lg:py-24">
+          <Shell className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+            <div>
+              <SectionHeading className="text-ink">
+                The clinic loses power. The visit is still recorded.
+              </SectionHeading>
+              <Body className="mt-4">
+                The note is understood on the handset, saved on the handset, and sent by
+                itself once there is a signal. Nobody has to remember to sync.
+              </Body>
+              <ul className="mt-7 grid gap-3">
+                {[
+                  "Dictate or photograph the note — no upload to read it",
+                  "Saving cannot fail for want of a network",
+                  "A repeated send is recognised, never filed twice",
+                ].map((line) => (
+                  <li key={line} className="flex items-start gap-2.5">
+                    <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                    <span className="text-[15px] leading-[23px] text-ink">{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex justify-center lg:justify-end">
+              <OfflineCapture />
+            </div>
           </Shell>
         </section>
 
@@ -180,15 +166,21 @@ export default function Home() {
                 A record you can reach from a borrowed handset
               </SectionHeading>
               <Body className="mt-4">
-                A patient-owned record is worth very little if owning it needs a smartphone. MedRekk
-                answers a dialled short code, so somebody with a feature phone, a borrowed handset
-                and no data can enter a PIN and read their medicines, allergies, test results, past
-                conditions and recent visits as plain text.
+                A record you own is worth little if owning it needs a smartphone.
               </Body>
-              <Body className="mt-3">
-                A responder standing over somebody unconscious can enter that patient&apos;s MedRekk
-                Code instead and reach only the emergency card — no PIN, nothing else.
-              </Body>
+              <ul className="mt-6 grid gap-3">
+                {[
+                  ["A PIN", "reads medicines, allergies, results, conditions and visits"],
+                  ["A MedRekk Code", "reaches the emergency card, no PIN, for a responder"],
+                ].map(([key, rest]) => (
+                  <li key={key} className="flex items-start gap-2.5">
+                    <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                    <span className="text-[15px] leading-[23px] text-ink">
+                      <span className="font-semibold">{key}</span> {rest}
+                    </span>
+                  </li>
+                ))}
+              </ul>
               <ButtonLink href="/ussd" variant="secondary" className="mt-7">
                 Try the dial-in simulator
               </ButtonLink>
@@ -249,10 +241,8 @@ export default function Home() {
                 The note is understood on the phone, not in a datacentre
               </SectionHeading>
               <Body className="mt-4">
-                Dictation is transcribed and a photographed report is read on the handset itself.
-                Nothing is uploaded to be interpreted, which is what makes it work with no
-                connection — and means a spoken note about somebody&apos;s health never leaves the
-                room to be understood.
+                Nothing is uploaded to be interpreted. A spoken note about somebody&apos;s health
+                never leaves the room to be understood.
               </Body>
             </div>
 

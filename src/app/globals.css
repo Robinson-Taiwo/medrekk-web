@@ -92,9 +92,68 @@
   }
 }
 
+/**
+ * One looping sequence, used by the illustrations.
+ *
+ * Each frame runs the same animation over the whole cycle and is pulled into its own slot
+ * with a negative delay, so three frames share one timeline and cannot drift apart. The
+ * reduced-motion block below flattens every animation to nothing, which leaves the first
+ * frame showing — a still picture rather than a broken one.
+ */
+@keyframes medrekk-frame {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  4%,
+  28% {
+    opacity: 1;
+    transform: none;
+  }
+  32%,
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* A value counting down, and a bar emptying with it. */
+@keyframes medrekk-drain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.07);
+  }
+}
+
+/* Something waiting to be sent, nudging while it waits. */
+@keyframes medrekk-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /*
+   * A cross-fading sequence cannot simply have its animation cut short: its closing keyframe
+   * is opacity 0, so finishing instantly would hide every frame. Show the first, drop the rest.
+   */
+  .medrekk-seq > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .medrekk-seq > * + * {
+    display: none !important;
   }
 
   *,
