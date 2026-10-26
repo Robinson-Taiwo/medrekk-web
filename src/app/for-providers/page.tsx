@@ -3,7 +3,6 @@ import {
   Aura,
   Body,
   Display,
-  Eyebrow,
   Heading,
   KeyChip,
   Lead,
@@ -44,8 +43,7 @@ export default function ForProviders() {
           <Aura className="left-1/2 top-[-8rem] h-[28rem] w-[46rem] -translate-x-1/2" />
           <Wrap className="relative max-w-[46rem] text-center">
             <Reveal>
-              <Eyebrow>For clinicians</Eyebrow>
-              <Display className="mt-7">The history arrives with the patient.</Display>
+              <Display>The history arrives with the patient.</Display>
               <Lead className="mx-auto mt-6">
                 No integration, no portal to be onboarded onto. The patient approves what you see,
                 in the room, in front of you.

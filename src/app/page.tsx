@@ -2,7 +2,6 @@ import { NightFooter, NightHeader } from "@/components/night-chrome";
 import {
   Aura,
   Body,
-  Eyebrow,
   Display,
   Heading,
   KeyChip,
@@ -46,10 +45,6 @@ export default function Home() {
 
           <Wrap className="relative">
             <div className="mx-auto max-w-[46rem] text-center">
-              {/* <Reveal>
-                <Eyebrow>Patient-owned medical records</Eyebrow>
-              </Reveal> */}
-
               <Reveal delay={60}>
                 <Display className="mt-7">The record belongs to the patient.</Display>
               </Reveal>

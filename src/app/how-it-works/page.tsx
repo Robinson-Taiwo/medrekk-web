@@ -5,7 +5,6 @@ import {
   Aura,
   Body,
   Display,
-  Eyebrow,
   Heading,
   KeyChip,
   Lead,
@@ -80,8 +79,7 @@ export default function HowItWorks() {
           <Aura className="left-1/2 top-[-8rem] h-[28rem] w-[46rem] -translate-x-1/2" />
           <Wrap className="relative max-w-[46rem] text-center">
             <Reveal>
-              <Eyebrow>How it works</Eyebrow>
-              <Display className="mt-7">The record behaves like it belongs to the patient.</Display>
+              <Display>The record behaves like it belongs to the patient.</Display>
               <Lead className="mx-auto mt-6">
                 Six steps, from the phone in someone&apos;s pocket to a note recorded in a clinic
                 with no power.

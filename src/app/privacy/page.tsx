@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { NightFooter, NightHeader } from "@/components/night-chrome";
-import { Aura, Body, Display, Eyebrow, Heading, Lead, NightShell, Panel, Wrap } from "@/components/night";
+import { Aura, Body, Display, Heading, Lead, NightShell, Panel, Wrap } from "@/components/night";
 import { Reveal } from "@/components/reveal";
 
 export const metadata = {
@@ -53,8 +53,7 @@ export default function PrivacyPage() {
         <Aura />
         <Wrap className="py-16 md:py-24">
           <Reveal>
-            <Eyebrow>Privacy</Eyebrow>
-            <Display className="mt-4 max-w-[18ch]">What we hold, and what never leaves your phone.</Display>
+            <Display className="max-w-[18ch]">What we hold, and what never leaves your phone.</Display>
             <Lead className="mt-5 max-w-[60ch]">
               MedRekk exists because medical records usually belong to whoever built the system rather than to the
               person they describe. That principle only means something if it is written down. Last updated {LAST_UPDATED}.
