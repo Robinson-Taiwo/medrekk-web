@@ -46,9 +46,9 @@ export default function Home() {
 
           <Wrap className="relative">
             <div className="mx-auto max-w-[46rem] text-center">
-              <Reveal>
+              {/* <Reveal>
                 <Eyebrow>Patient-owned medical records</Eyebrow>
-              </Reveal>
+              </Reveal> */}
 
               <Reveal delay={60}>
                 <Display className="mt-7">The record belongs to the patient.</Display>

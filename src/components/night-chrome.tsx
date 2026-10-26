@@ -74,6 +74,10 @@ export function NightFooter() {
         { href: "/signup", label: "Create an account" },
       ],
     },
+    {
+      heading: "Legal",
+      links: [{ href: "/privacy", label: "Privacy" }],
+    },
   ];
 
   return (
