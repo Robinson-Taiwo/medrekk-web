@@ -110,13 +110,18 @@ export default function Credentials() {
     return (
       <NightNotice tone="pending" title="This account cannot approve credentials">
         <p>
-          Approving is allowed for accounts the server lists in <code className="font-mono">ADMIN_EMAILS</code>,
-          a comma-separated list set where the backend runs. Add{" "}
-          <span className="font-mono text-mist">{auth.user.fullName}</span>&rsquo;s sign-in email to it and
-          restart the backend, then reload this page.
+          You are signed in as{" "}
+          <span className="font-mono text-mist">{auth.user.email ?? auth.user.fullName}</span>. The server
+          compares exactly this address against <code className="font-mono">ADMIN_EMAILS</code>, a
+          comma-separated list set where the backend runs, so it must appear there character for character.
         </p>
         <p className="mt-2">
-          With nothing in <code className="font-mono">ADMIN_EMAILS</code>, nobody can approve anyone — which is
+          If you believe you added it: check that it is <em>this</em> address rather than another account of
+          yours, that the value has no quotation marks around it, and that the backend has been restarted —
+          the list is read once at start-up.
+        </p>
+        <p className="mt-2">
+          With nothing in <code className="font-mono">ADMIN_EMAILS</code>, nobody can approve anyone, which is
           the usual reason a worker stays pending forever.
         </p>
       </NightNotice>

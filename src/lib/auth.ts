@@ -1,6 +1,8 @@
 export interface WebUser {
   id: string;
   fullName: string;
+  /** The address the server matches against ADMIN_EMAILS. Shown when approving is refused. */
+  email: string;
   role: "PATIENT" | "HEALTH_WORKER";
   facility: string | null;
   credentialStatus?: string;
