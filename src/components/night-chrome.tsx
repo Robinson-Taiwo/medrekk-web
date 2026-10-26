@@ -36,7 +36,21 @@ export function NightHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4 sm:px-6">
+    <header className="sticky top-0 z-50">
+      {/*
+        A fade behind the floating bar.
+        
+        The capsule is inset, so there is clear space above and beside it — and the page was
+        scrolling straight through that gap, leaving headings legible behind the bar and
+        colliding with it. This layer sits under the capsule and over the page, fading the
+        content out before it reaches the top edge, so the bar floats on the page rather than
+        in a hole cut through it.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[104px] bg-gradient-to-b from-night via-night/90 to-transparent"
+      />
+      <div className="relative px-4 pt-4 sm:px-6">
       <Wrap className="!px-0">
         <div className="flex h-[60px] items-center gap-3 rounded-[18px] border border-white/[0.08] bg-night/80 px-3 shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl sm:px-4">
           <Link href="/" className="shrink-0 rounded-md text-mist" aria-label="MedRekk home">
@@ -95,6 +109,7 @@ export function NightHeader() {
           </div>
         </div>
       </Wrap>
+      </div>
     </header>
   );
 }

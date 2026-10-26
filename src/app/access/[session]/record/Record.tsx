@@ -336,54 +336,92 @@ export default function RecordPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[680px]">
-      <h1 className="text-3xl font-bold text-mist">{record.patient.name}</h1>
-      <p className="mt-1 text-sm text-mist-faint">MedRekk Code {record.patient.medrekkCode}</p>
-      <p className="mt-1 text-sm text-mist-faint">
-        Access granted until {new Date(record.grantedUntil).toLocaleString()}
-      </p>
-      {worker ? (
-        <p className="mt-1 text-sm text-mist-faint">
-          Signed in as {worker.user.fullName}. You can verify only in sessions you requested while signed in.
-        </p>
-      ) : null}
+    <div>
+      {/* The header is its own band, so the record below can use the full width. */}
+      <header className="rounded-2xl border border-white/[0.07] bg-white/[0.035] p-5 sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="font-display text-[30px] font-bold leading-[1.1] tracking-[-0.03em] text-mist">
+              {record.patient.name}
+            </h1>
+            <p className="mt-2 font-mono text-[13px] tracking-[0.14em] text-mist-dim">
+              {record.patient.medrekkCode}
+            </p>
+          </div>
+          <div className="rounded-xl border border-white/[0.09] bg-white/[0.04] px-3.5 py-2.5">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-mist-faint">Access ends</p>
+            <p className="mt-0.5 text-[14px] font-semibold text-mist">
+              {new Date(record.grantedUntil).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              <span className="ml-1.5 font-normal text-mist-dim">
+                {new Date(record.grantedUntil).toLocaleDateString()}
+              </span>
+            </p>
+          </div>
+        </div>
+        {worker ? (
+          <p className="mt-4 border-t border-white/[0.07] pt-4 text-[13px] leading-[1.6] text-mist-faint">
+            Signed in as {worker.user.fullName}. You can verify only in sessions you requested while signed in.
+          </p>
+        ) : null}
+      </header>
 
-      {record.authorizedScopes.map((scope: AccessScope) => {
-        const claims = record.data[scope] ?? [];
-        return (
-          <section key={scope} className="mt-8">
-            <h2 className="text-lg font-semibold text-mist">{SCOPE_LABEL[scope]}</h2>
-            {claims.length === 0 ? (
-              <p className="mt-2 text-sm text-mist-faint">
-                {scope === "EMERGENCY_INFORMATION" ? "Shown separately below." : "Nothing recorded."}
-              </p>
-            ) : (
-              <ul className="mt-2 space-y-2">
-                {claims.map((c) => (
-                  <li key={c.id} className="rounded-xl border border-white/[0.09] p-3">
-                    <p className="text-base text-mist">{c.value}</p>
-                    <div className="mt-1 flex flex-wrap items-center gap-2">
-                      <Badge status={c.status} />
-                      <span className="text-xs text-mist-faint">Source: {c.source}</span>
-                    </div>
-                    {worker ? (
-                      <>
-                        <ClaimEvidence session={session} claim={c} onUpdated={(u) => updateClaim(scope, u)} />
-                        <ClaimVerify session={session} claim={c} onUpdated={(u) => updateClaim(scope, u)} />
-                      </>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        );
-      })}
+      {/*
+        A record is a set of short lists, not one long one.
+        
+        Stacked in a single column, six categories of two or three items each became a page
+        you had to scroll through to learn what was in it — and the thing a clinician does
+        here is scan, not read. Side by side, the whole record is visible at a glance and each
+        category keeps its own boundary.
+      */}
+      <div className="mt-6 grid items-start gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        {record.authorizedScopes.map((scope: AccessScope) => {
+          const claims = record.data[scope] ?? [];
+          return (
+            <section
+              key={scope}
+              className="overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.025]"
+            >
+              <div className="flex items-baseline justify-between gap-2 border-b border-white/[0.07] px-4 py-3">
+                <h2 className="text-[14px] font-semibold text-mist">{SCOPE_LABEL[scope]}</h2>
+                {claims.length > 0 ? (
+                  <span className="rounded-md bg-white/[0.07] px-1.5 py-0.5 text-[11.5px] tabular-nums text-mist-dim">
+                    {claims.length}
+                  </span>
+                ) : null}
+              </div>
+
+              {claims.length === 0 ? (
+                <p className="px-4 py-5 text-[13px] text-mist-faint">
+                  {scope === "EMERGENCY_INFORMATION" ? "Shown separately below." : "Nothing recorded."}
+                </p>
+              ) : (
+                <ul className="divide-y divide-white/[0.06]">
+                  {claims.map((c) => (
+                    <li key={c.id} className="px-4 py-3.5">
+                      <p className="text-[15px] font-medium leading-[1.4] text-mist">{c.value}</p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <Badge status={c.status} />
+                        <span className="text-[11.5px] text-mist-faint">{c.source}</span>
+                      </div>
+                      {worker ? (
+                        <div className="mt-1">
+                          <ClaimEvidence session={session} claim={c} onUpdated={(u) => updateClaim(scope, u)} />
+                          <ClaimVerify session={session} claim={c} onUpdated={(u) => updateClaim(scope, u)} />
+                        </div>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          );
+        })}
+      </div>
 
       {profile ? <ProfileReview session={session} profile={profile} onUpdated={setProfile} /> : null}
-      {profileError ? <p className="mt-6 text-sm text-rose-300">{profileError}</p> : null}
+      {profileError ? <p className="mt-6 text-[13px] text-rose-300">{profileError}</p> : null}
 
-      <p className="mt-10 text-xs text-mist-faint">
+      <p className="mt-10 text-[12.5px] leading-[1.7] text-mist-faint">
         You can see only what the patient approved. Every view of this record is logged.
       </p>
     </div>
