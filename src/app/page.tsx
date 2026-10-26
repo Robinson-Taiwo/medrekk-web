@@ -14,6 +14,7 @@ import {
 import { Reveal } from "@/components/reveal";
 import { HeroSurface, OfflineCapture, PillarIcon } from "@/components/illustration";
 import { AccessRequestScreen, HomeScreen, Phone, VisitScreen } from "@/components/phone";
+import { DownloadCard } from "@/components/download";
 
 const PILLARS = [
   {
@@ -194,6 +195,24 @@ export default function Home() {
 
             <Reveal delay={120} className="flex justify-center lg:justify-end">
               <Handset />
+            </Reveal>
+          </Wrap>
+        </section>
+
+        {/* ---------------- Get the app ---------------- */}
+        <section className="border-t border-white/[0.07] py-20 lg:py-24">
+          <Wrap>
+            <Reveal>
+              <Heading className="max-w-[20ch]">It starts with the app on the patient&apos;s phone.</Heading>
+              <Lead className="mt-5">
+                Everything else here — an approved record read in a clinic, an emergency card, a
+                record reached by dialling — begins with somebody holding their own history.
+              </Lead>
+            </Reveal>
+            <Reveal>
+              <div className="mt-9">
+                <DownloadCard />
+              </div>
             </Reveal>
           </Wrap>
         </section>

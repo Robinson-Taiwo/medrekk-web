@@ -11,6 +11,7 @@ const NAV = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/for-providers", label: "For providers" },
   { href: "/ussd", label: "Dial-in" },
+  { href: "/download", label: "Get the app" },
 ] as const;
 
 /**
@@ -122,6 +123,7 @@ export function NightFooter() {
         { href: "/how-it-works", label: "How it works" },
         { href: "/for-providers", label: "For providers" },
         { href: "/ussd", label: "Dial-in simulator" },
+        { href: "/download", label: "Get the app" },
       ],
     },
     {

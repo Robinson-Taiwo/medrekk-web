@@ -127,6 +127,22 @@ export function NightLink({
   return <Link className={buttonSkin(variant, size, className)} {...rest} />;
 }
 
+/**
+ * The same button, for an address outside this site.
+ *
+ * NightLink is next/link, which exists to move between pages of this app without a page load.
+ * A build artifact on Expo's servers is neither, so it gets a plain anchor rather than a router
+ * that has nothing to route.
+ */
+export function NightAnchor({
+  variant = "accent",
+  size = "md",
+  className = "",
+  ...rest
+}: ComponentProps<"a"> & { variant?: Variant; size?: Size }) {
+  return <a className={buttonSkin(variant, size, className)} {...rest} />;
+}
+
 /** A labelled input on the night surface. The label is always rendered, never a placeholder. */
 export function NightField({
   label,
