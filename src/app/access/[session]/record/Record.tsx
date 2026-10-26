@@ -24,7 +24,7 @@ interface ReviewProfile {
 
 function Badge({ status }: { status: string }) {
   return (
-    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_BADGE[status] ?? "bg-gray-200 text-gray-700"}`}>
+    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_BADGE[status] ?? "bg-white/[0.04]/[0.08] text-mist-dim"}`}>
       {STATUS_LABEL[status] ?? status}
     </span>
   );
@@ -59,7 +59,7 @@ function ClaimVerify({ session, claim, onUpdated }: { session: string; claim: Cl
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="mt-2 text-sm font-medium text-[#0F6E56] underline">
+      <button onClick={() => setOpen(true)} className="mt-2 text-sm font-medium text-glow underline">
         Verify this
       </button>
     );
@@ -70,18 +70,18 @@ function ClaimVerify({ session, claim, onUpdated }: { session: string; claim: Cl
         value={method}
         onChange={(e) => setMethod(e.target.value)}
         placeholder="How did you verify it? e.g. Examined patient"
-        className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
+        className="rounded-lg border border-white/[0.09] px-3 py-2 text-sm text-mist"
       />
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="text-sm text-rose-300">{error}</p> : null}
       <div className="flex gap-2">
         <button
           onClick={() => void submit()}
           disabled={busy}
-          className="rounded-lg bg-[#0F6E56] px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+          className="rounded-lg bg-glow px-3 py-1.5 text-sm font-semibold text-glow-ink disabled:opacity-60"
         >
           {busy ? "Saving..." : "Confirm: clinically verified"}
         </button>
-        <button onClick={() => setOpen(false)} className="text-sm text-gray-600">Cancel</button>
+        <button onClick={() => setOpen(false)} className="text-sm text-mist-dim">Cancel</button>
       </div>
     </div>
   );
@@ -128,7 +128,7 @@ function ClaimEvidence({ session, claim, onUpdated }: { session: string; claim: 
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="mt-2 mr-4 text-sm font-medium text-[#0F6E56] underline">
+      <button onClick={() => setOpen(true)} className="mt-2 mr-4 text-sm font-medium text-glow underline">
         Add evidence
       </button>
     );
@@ -138,7 +138,7 @@ function ClaimEvidence({ session, claim, onUpdated }: { session: string; claim: 
       <select
         value={kind}
         onChange={(e) => setKind(e.target.value)}
-        className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
+        className="rounded-lg border border-white/[0.09] px-3 py-2 text-sm text-mist"
       >
         {EVIDENCE_OPTIONS.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>
@@ -149,19 +149,19 @@ function ClaimEvidence({ session, claim, onUpdated }: { session: string; claim: 
         onChange={(e) => setDescription(e.target.value)}
         maxLength={300}
         placeholder="What did you see? e.g. HbA1c result dated 12 Sep 2026"
-        className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
+        className="rounded-lg border border-white/[0.09] px-3 py-2 text-sm text-mist"
       />
-      <p className="text-xs text-gray-500">{description.trim().length} / 300. This records a description, not an uploaded file.</p>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      <p className="text-xs text-mist-faint">{description.trim().length} / 300. This records a description, not an uploaded file.</p>
+      {error ? <p className="text-sm text-rose-300">{error}</p> : null}
       <div className="flex gap-2">
         <button
           onClick={() => void submit()}
           disabled={busy}
-          className="rounded-lg bg-[#0F6E56] px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+          className="rounded-lg bg-glow px-3 py-1.5 text-sm font-semibold text-glow-ink disabled:opacity-60"
         >
           {busy ? "Saving..." : "Attach evidence"}
         </button>
-        <button onClick={() => setOpen(false)} className="text-sm text-gray-600">Cancel</button>
+        <button onClick={() => setOpen(false)} className="text-sm text-mist-dim">Cancel</button>
       </div>
     </div>
   );
@@ -170,7 +170,7 @@ function ClaimEvidence({ session, claim, onUpdated }: { session: string; claim: 
 function ListLine({ label, items }: { label: string; items: string[] }) {
   if (items.length === 0) return null;
   return (
-    <p className="text-sm text-gray-900">
+    <p className="text-sm text-mist">
       <span className="font-medium">{label}:</span> {items.join(", ")}
     </p>
   );
@@ -202,26 +202,26 @@ function ProfileReview({ session, profile, onUpdated }: { session: string; profi
   };
 
   return (
-    <section className="mt-8 rounded-xl border border-red-200 bg-red-50/40 p-4">
-      <h2 className="text-lg font-semibold text-gray-900">Emergency profile</h2>
+    <section className="mt-8 rounded-xl border border-red-200 bg-rose-400/[0.08]/40 p-4">
+      <h2 className="text-lg font-semibold text-mist">Emergency profile</h2>
       <div className="mt-1 flex items-center gap-2">
         <Badge status={profile.verificationStatus} />
         {profile.verifiedByName && profile.verifiedAt ? (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-mist-faint">
             by {profile.verifiedByName}
             {profile.verifiedByFacility ? `, ${profile.verifiedByFacility}` : ""} on {new Date(profile.verifiedAt).toLocaleDateString()}
           </span>
         ) : null}
       </div>
       <div className="mt-3 space-y-1">
-        {profile.bloodGroup ? <p className="text-sm text-gray-900"><span className="font-medium">Blood group:</span> {profile.bloodGroup}</p> : null}
+        {profile.bloodGroup ? <p className="text-sm text-mist"><span className="font-medium">Blood group:</span> {profile.bloodGroup}</p> : null}
         <ListLine label="Allergies" items={profile.criticalAllergies} />
         <ListLine label="Conditions" items={profile.criticalConditions} />
         <ListLine label="Medications" items={profile.criticalMedications} />
         <ListLine label="Devices" items={profile.implantedDevices} />
         <ListLine label="Warnings" items={profile.importantWarnings} />
         {profile.emergencyContact ? (
-          <p className="text-sm text-gray-900">
+          <p className="text-sm text-mist">
             <span className="font-medium">Contact:</span> {profile.emergencyContact.name} ({profile.emergencyContact.relationship}) {profile.emergencyContact.phone}
           </p>
         ) : null}
@@ -232,7 +232,7 @@ function ProfileReview({ session, profile, onUpdated }: { session: string; profi
           <select
             value={level}
             onChange={(e) => setLevel(e.target.value as "EVIDENCE_BACKED" | "CLINICALLY_VERIFIED")}
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
+            className="rounded-lg border border-white/[0.09] px-3 py-2 text-sm text-mist"
           >
             <option value="CLINICALLY_VERIFIED">Clinically verified (needs an approved credential)</option>
             <option value="EVIDENCE_BACKED">Evidence-backed</option>
@@ -241,13 +241,13 @@ function ProfileReview({ session, profile, onUpdated }: { session: string; profi
             value={method}
             onChange={(e) => setMethod(e.target.value)}
             placeholder="How did you check it? e.g. Reviewed with patient"
-            className="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900"
+            className="rounded-lg border border-white/[0.09] px-3 py-2 text-sm text-mist"
           />
-          {error ? <p className="text-sm text-red-700">{error}</p> : null}
+          {error ? <p className="text-sm text-rose-300">{error}</p> : null}
           <button
             onClick={() => void submit()}
             disabled={busy}
-            className="self-start rounded-lg bg-[#0F6E56] px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+            className="self-start rounded-lg bg-glow px-3 py-1.5 text-sm font-semibold text-glow-ink disabled:opacity-60"
           >
             {busy ? "Saving..." : "Mark as verified"}
           </button>
@@ -322,28 +322,28 @@ export default function RecordPage() {
 
   if (error) {
     return (
-      <main className="mx-auto max-w-md px-6 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">{error}</h1>
-        <Link href="/access" className="mt-6 inline-block text-[#0F6E56] underline">
+      <div className="mx-auto max-w-[44ch] text-center">
+        <h1 className="text-2xl font-bold text-mist">{error}</h1>
+        <Link href="/access" className="mt-6 inline-block text-glow underline">
           Look up a record
         </Link>
-      </main>
+      </div>
     );
   }
 
   if (!record) {
-    return <p className="p-6 text-center text-gray-500">Loading record…</p>;
+    return <p className="p-6 text-center text-mist-faint">Loading record…</p>;
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-10">
-      <h1 className="text-3xl font-bold text-gray-900">{record.patient.name}</h1>
-      <p className="mt-1 text-sm text-gray-500">MedRekk Code {record.patient.medrekkCode}</p>
-      <p className="mt-1 text-sm text-gray-500">
+    <div className="mx-auto max-w-[680px]">
+      <h1 className="text-3xl font-bold text-mist">{record.patient.name}</h1>
+      <p className="mt-1 text-sm text-mist-faint">MedRekk Code {record.patient.medrekkCode}</p>
+      <p className="mt-1 text-sm text-mist-faint">
         Access granted until {new Date(record.grantedUntil).toLocaleString()}
       </p>
       {worker ? (
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-mist-faint">
           Signed in as {worker.user.fullName}. You can verify only in sessions you requested while signed in.
         </p>
       ) : null}
@@ -352,19 +352,19 @@ export default function RecordPage() {
         const claims = record.data[scope] ?? [];
         return (
           <section key={scope} className="mt-8">
-            <h2 className="text-lg font-semibold text-gray-900">{SCOPE_LABEL[scope]}</h2>
+            <h2 className="text-lg font-semibold text-mist">{SCOPE_LABEL[scope]}</h2>
             {claims.length === 0 ? (
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-mist-faint">
                 {scope === "EMERGENCY_INFORMATION" ? "Shown separately below." : "Nothing recorded."}
               </p>
             ) : (
               <ul className="mt-2 space-y-2">
                 {claims.map((c) => (
-                  <li key={c.id} className="rounded-xl border border-gray-200 p-3">
-                    <p className="text-base text-gray-900">{c.value}</p>
+                  <li key={c.id} className="rounded-xl border border-white/[0.09] p-3">
+                    <p className="text-base text-mist">{c.value}</p>
                     <div className="mt-1 flex flex-wrap items-center gap-2">
                       <Badge status={c.status} />
-                      <span className="text-xs text-gray-500">Source: {c.source}</span>
+                      <span className="text-xs text-mist-faint">Source: {c.source}</span>
                     </div>
                     {worker ? (
                       <>
@@ -381,11 +381,11 @@ export default function RecordPage() {
       })}
 
       {profile ? <ProfileReview session={session} profile={profile} onUpdated={setProfile} /> : null}
-      {profileError ? <p className="mt-6 text-sm text-red-700">{profileError}</p> : null}
+      {profileError ? <p className="mt-6 text-sm text-rose-300">{profileError}</p> : null}
 
-      <p className="mt-10 text-xs text-gray-400">
+      <p className="mt-10 text-xs text-mist-faint">
         You can see only what the patient approved. Every view of this record is logged.
       </p>
-    </main>
+    </div>
   );
 }

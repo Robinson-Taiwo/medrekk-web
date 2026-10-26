@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { Logo, Mark } from "./brand";
 import { KeyChip, NightLink, Wrap } from "./night";
@@ -10,40 +14,85 @@ const NAV = [
 ] as const;
 
 /**
- * Slim, sticky and barely there. The page scrolls under a blurred strip with a hairline that
- * only appears where there is content behind it, so the header reads as a layer of the page
- * rather than a bar bolted to the top of it.
+ * A floating bar rather than a strip across the top.
+ *
+ * Full-bleed, a header is a lid: it belongs to the browser chrome and the page starts beneath
+ * it. Detached — inset from every edge, with its own border and the page visible running
+ * underneath — it becomes an object sitting on the page, and the page reads as continuous
+ * behind it. That is the whole difference, and it is mostly margin and a radius.
+ *
+ * The code field stays because it is the one thing this site is for: "access a record" is a
+ * verb with an argument, not a page to browse to. It is the quieter of the two right-hand
+ * controls so there is still a single obvious action.
  */
 export function NightHeader() {
+  const [code, setCode] = useState("");
+  const router = useRouter();
+
+  const go = (e: React.SyntheticEvent): void => {
+    e.preventDefault();
+    const clean = code.toUpperCase().replace(/[^A-Z0-9-]/g, "").slice(0, 20);
+    router.push(clean ? `/access?code=${encodeURIComponent(clean)}` : "/access");
+  };
+
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.07] bg-night/70 backdrop-blur-xl">
-      <Wrap className="flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="rounded-md text-mist" aria-label="MedRekk home">
-          <Logo />
-        </Link>
-
-        <nav aria-label="Main" className="hidden items-center gap-1 md:flex">
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-lg px-3 py-2 text-[14px] font-medium text-mist-dim transition-colors hover:bg-white/[0.06] hover:text-mist"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <Link
-            href="/login"
-            className="hidden rounded-lg px-3 py-2 text-[14px] font-medium text-mist-dim transition-colors hover:text-mist sm:block"
-          >
-            Sign in
+    <header className="sticky top-0 z-50 px-4 pt-4 sm:px-6">
+      <Wrap className="!px-0">
+        <div className="flex h-[60px] items-center gap-3 rounded-[18px] border border-white/[0.08] bg-night/80 px-3 shadow-[0_18px_40px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl sm:px-4">
+          <Link href="/" className="shrink-0 rounded-md text-mist" aria-label="MedRekk home">
+            <Logo />
           </Link>
-          <NightLink href="/access" className="shrink-0">
-            Access a record
-          </NightLink>
+
+          <nav aria-label="Main" className="hidden flex-1 items-center justify-center gap-1 lg:flex">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-lg px-3 py-2 text-[14px] font-medium text-mist-dim transition-colors hover:text-mist"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex items-center gap-2 lg:ml-0">
+            <form
+              onSubmit={go}
+              className="hidden items-center rounded-lg border border-white/[0.09] bg-white/[0.04] pl-3 pr-1 transition-colors focus-within:border-glow/40 xl:flex"
+            >
+              <label htmlFor="header-code" className="sr-only">
+                MedRekk code
+              </label>
+              <input
+                id="header-code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="MRK-82941"
+                autoCapitalize="characters"
+                spellCheck={false}
+                className="w-[104px] bg-transparent py-1.5 font-mono text-[12.5px] tracking-[0.12em] text-mist placeholder:text-mist-faint/70 focus:outline-none"
+              />
+              <button
+                type="submit"
+                aria-label="Find this record"
+                className="grid h-6 w-6 place-items-center rounded-md text-mist-dim transition-colors hover:bg-white/[0.08] hover:text-mist"
+              >
+                <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 8h9M8.5 4l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </form>
+
+            <Link
+              href="/login"
+              className="hidden rounded-lg px-3 py-2 text-[14px] font-medium text-mist-dim transition-colors hover:text-mist sm:block"
+            >
+              Sign in
+            </Link>
+            <NightLink href="/access" className="shrink-0 !h-10 !px-4 !text-[14px]">
+              Access a record
+            </NightLink>
+          </div>
         </div>
       </Wrap>
     </header>

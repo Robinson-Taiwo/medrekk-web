@@ -1,10 +1,25 @@
 import { Suspense } from "react";
+
+import { NightFooter, NightHeader } from "@/components/night-chrome";
+import { NightShell, Wrap } from "@/components/night";
 import Emergency from "./Emergency";
+
+export const metadata = {
+  title: "Emergency card",
+};
 
 export default function Page() {
   return (
-    <Suspense fallback={<p className="p-6 text-gray-500">Loading…</p>}>
-      <Emergency />
-    </Suspense>
+    <NightShell>
+      <NightHeader />
+      <main className="relative flex-1 py-12 lg:py-16">
+        <Wrap className="relative">
+          <Suspense fallback={<p className="text-[14px] text-mist-faint">Loading…</p>}>
+            <Emergency />
+          </Suspense>
+        </Wrap>
+      </main>
+      <NightFooter />
+    </NightShell>
   );
 }

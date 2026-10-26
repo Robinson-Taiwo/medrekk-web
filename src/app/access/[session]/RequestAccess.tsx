@@ -75,16 +75,16 @@ export default function RequestAccessPage() {
   };
 
   return (
-    <main className="mx-auto max-w-md px-6 py-16">
-      <p className="text-sm font-semibold text-[#0F6E56]">Record found</p>
-      <h1 className="text-3xl font-bold text-gray-900">{found?.patientName ?? "Patient record"}</h1>
-      {found ? <p className="mt-1 tracking-widest text-gray-500">{found.medrekkCode}</p> : null}
-      <p className="mt-4 text-gray-600">
+    <div className="mx-auto max-w-[680px]">
+      <p className="text-sm font-semibold text-glow">Record found</p>
+      <h1 className="text-3xl font-bold text-mist">{found?.patientName ?? "Patient record"}</h1>
+      {found ? <p className="mt-1 tracking-widest text-mist-faint">{found.medrekkCode}</p> : null}
+      <p className="mt-4 text-mist-dim">
         Before accessing this record, tell the patient who you are and why you need access. They decide what you can see.
       </p>
 
       <form onSubmit={(e) => void submit(e)} className="mt-8 flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+        <label className="flex flex-col gap-1 text-sm font-medium text-mist-dim">
           Your name
           <input
             value={name}
@@ -92,59 +92,59 @@ export default function RequestAccessPage() {
             required
             minLength={2}
             placeholder="Dr. Michael Adeyemi"
-            className="rounded-xl border border-gray-300 px-4 py-3 text-base text-gray-900"
+            className="rounded-xl border border-white/[0.09] px-4 py-3 text-base text-mist"
           />
         </label>
-        <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+        <label className="flex flex-col gap-1 text-sm font-medium text-mist-dim">
           Your role
           <select
             value={role}
             onChange={(e) => setRole(e.target.value as RequesterRole)}
-            className="rounded-xl border border-gray-300 px-4 py-3 text-base text-gray-900"
+            className="rounded-xl border border-white/[0.09] px-4 py-3 text-base text-mist"
           >
             {REQUESTER_ROLES.map((r) => (
               <option key={r} value={r}>{ROLE_LABEL[r]}</option>
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+        <label className="flex flex-col gap-1 text-sm font-medium text-mist-dim">
           Reason
           <input
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             required
             minLength={3}
-            className="rounded-xl border border-gray-300 px-4 py-3 text-base text-gray-900"
+            className="rounded-xl border border-white/[0.09] px-4 py-3 text-base text-mist"
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+        <label className="flex flex-col gap-1 text-sm font-medium text-mist-dim">
           Facility or organization (optional)
           <input
             value={facility}
             onChange={(e) => setFacility(e.target.value)}
             maxLength={160}
             placeholder="General Hospital"
-            className="rounded-xl border border-gray-300 px-4 py-3 text-base text-gray-900"
+            className="rounded-xl border border-white/[0.09] px-4 py-3 text-base text-mist"
           />
         </label>
 
         <fieldset className="flex flex-col gap-2">
-          <legend className="text-sm font-medium text-gray-700">Information you need</legend>
+          <legend className="text-sm font-medium text-mist-dim">Information you need</legend>
           {ACCESS_SCOPES.map((s) => (
-            <label key={s} className="flex items-center gap-3 rounded-xl border border-gray-200 px-4 py-2 text-gray-900">
+            <label key={s} className="flex items-center gap-3 rounded-xl border border-white/[0.09] px-4 py-2 text-mist">
               <input type="checkbox" checked={scopes.includes(s)} onChange={() => toggle(s)} />
               {SCOPE_LABEL[s]}
             </label>
           ))}
         </fieldset>
 
-        <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
+        <label className="flex flex-col gap-1 text-sm font-medium text-mist-dim">
           Access needed for
           <select
             value={minutes}
             onChange={(e) => setMinutes(Number(e.target.value))}
-            className="rounded-xl border border-gray-300 px-4 py-3 text-base text-gray-900"
+            className="rounded-xl border border-white/[0.09] px-4 py-3 text-base text-mist"
           >
             {DURATIONS.map((d) => (
               <option key={d.minutes} value={d.minutes}>{d.label}</option>
@@ -152,15 +152,15 @@ export default function RequestAccessPage() {
           </select>
         </label>
 
-        {error ? <p className="text-sm text-red-700">{error}</p> : null}
+        {error ? <p className="text-sm text-rose-300">{error}</p> : null}
         <button
           type="submit"
           disabled={busy}
-          className="rounded-xl bg-[#0F6E56] py-3 font-semibold text-white disabled:opacity-60"
+          className="rounded-xl bg-glow py-3 font-semibold text-glow-ink disabled:opacity-60"
         >
           {busy ? "Sending..." : "Request access"}
         </button>
       </form>
-    </main>
+    </div>
   );
 }

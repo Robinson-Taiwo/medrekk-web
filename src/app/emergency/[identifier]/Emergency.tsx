@@ -12,10 +12,10 @@ function Section({ title, items }: { title: string; items: string[] }) {
   if (items.length === 0) return null;
   return (
     <section className="mt-6">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">{title}</h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-mist-faint">{title}</h2>
       <ul className="mt-2 space-y-1">
         {items.map((item) => (
-          <li key={item} className="rounded-lg bg-red-50 px-3 py-2 text-base font-medium text-red-900">
+          <li key={item} className="rounded-lg bg-rose-400/[0.08] px-3 py-2 text-base font-medium text-rose-200">
             {item}
           </li>
         ))}
@@ -52,16 +52,16 @@ export default function EmergencyPage() {
 
   if (error) {
     return (
-      <main className="mx-auto max-w-md px-6 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">{error}</h1>
-        <Link href="/emergency" className="mt-6 inline-block text-red-700 underline">
+      <div className="mx-auto max-w-[44ch] text-center">
+        <h1 className="text-2xl font-bold text-mist">{error}</h1>
+        <Link href="/emergency" className="mt-6 inline-block text-rose-300 underline">
           Try another code
         </Link>
-      </main>
+      </div>
     );
   }
 
-  if (!profile) return <p className="p-6 text-center text-gray-500">Loading emergency profile…</p>;
+  if (!profile) return <p className="p-6 text-center text-mist-faint">Loading emergency profile…</p>;
 
   const hasAnything =
     profile.criticalAllergies.length +
@@ -74,28 +74,28 @@ export default function EmergencyPage() {
     Boolean(profile.emergencyContact);
 
   return (
-    <main className="mx-auto max-w-xl px-6 py-10">
-      <p className="text-xs font-semibold uppercase tracking-widest text-red-700">Emergency profile</p>
-      <h1 className="mt-1 text-3xl font-bold text-gray-900">{profile.patientName}</h1>
-      <p className="mt-1 text-sm text-gray-500">MedRekk Code {profile.emergencyId}</p>
+    <div className="mx-auto max-w-[680px]">
+      <p className="text-xs font-semibold uppercase tracking-widest text-rose-300">Emergency profile</p>
+      <h1 className="mt-1 text-3xl font-bold text-mist">{profile.patientName}</h1>
+      <p className="mt-1 text-sm text-mist-faint">MedRekk Code {profile.emergencyId}</p>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <span
           className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-            STATUS_BADGE[profile.verificationStatus] ?? "bg-gray-200 text-gray-700"
+            STATUS_BADGE[profile.verificationStatus] ?? "bg-white/[0.04]/[0.08] text-mist-dim"
           }`}
         >
           {STATUS_LABEL[profile.verificationStatus] ?? profile.verificationStatus}
         </span>
         {profile.lastConfirmedAt ? (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-mist-faint">
             Last confirmed {new Date(profile.lastConfirmedAt).toLocaleDateString()}
           </span>
         ) : null}
       </div>
 
       {profile.verifiedByName && profile.verifiedAt ? (
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="mt-2 text-sm text-mist-dim">
           Reviewed by {profile.verifiedByName}
           {profile.verifiedByFacility ? `, ${profile.verifiedByFacility}` : ""} on{" "}
           {new Date(profile.verifiedAt).toLocaleDateString()}
@@ -103,19 +103,19 @@ export default function EmergencyPage() {
       ) : null}
 
       {profile.verificationStatus === "UNVERIFIED" || profile.verificationStatus === "SELF_REPORTED" ? (
-        <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+        <p className="mt-3 rounded-lg bg-amber-400/[0.08] px-3 py-2 text-sm text-amber-100/90">
           This information was entered by the patient and has not been clinically verified.
         </p>
       ) : null}
 
       {!hasAnything ? (
-        <p className="mt-8 text-gray-600">The patient has not recorded any emergency information yet.</p>
+        <p className="mt-8 text-mist-dim">The patient has not recorded any emergency information yet.</p>
       ) : null}
 
       {profile.bloodGroup ? (
         <section className="mt-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Blood group</h2>
-          <p className="mt-2 text-2xl font-bold text-gray-900">{profile.bloodGroup}</p>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-mist-faint">Blood group</h2>
+          <p className="mt-2 text-2xl font-bold text-mist">{profile.bloodGroup}</p>
         </section>
       ) : null}
 
@@ -127,19 +127,19 @@ export default function EmergencyPage() {
 
       {profile.emergencyContact ? (
         <section className="mt-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Emergency contact</h2>
-          <p className="mt-2 text-base text-gray-900">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-mist-faint">Emergency contact</h2>
+          <p className="mt-2 text-base text-mist">
             {profile.emergencyContact.name} ({profile.emergencyContact.relationship})
           </p>
-          <a href={`tel:${profile.emergencyContact.phone}`} className="text-lg font-semibold text-red-700 underline">
+          <a href={`tel:${profile.emergencyContact.phone}`} className="text-lg font-semibold text-rose-300 underline">
             {profile.emergencyContact.phone}
           </a>
         </section>
       ) : null}
 
-      <p className="mt-10 text-xs text-gray-400">
+      <p className="mt-10 text-xs text-mist-faint">
         This access was logged at {new Date(profile.accessLoggedAt).toLocaleString()} and is visible to the patient.
       </p>
-    </main>
+    </div>
   );
 }

@@ -46,53 +46,66 @@ export default function ReferralPage() {
 
   if (error) {
     return (
-      <main className="mx-auto max-w-md px-6 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">{error}</h1>
-        <p className="mt-3 text-sm text-gray-600">
-          Ask the patient to show their current referral, or look them up with their MedRekk Code.
+      <div className="mx-auto max-w-[44ch] py-10 text-center">
+        <h1 className="text-[24px] font-semibold tracking-[-0.02em] text-mist">{error}</h1>
+        <p className="mt-3 text-[14px] leading-[1.65] text-mist-dim">
+          A referral is a snapshot with an expiry date, so this one may simply have run out. Ask the patient to
+          share a current one, or look them up with their MedRekk code.
         </p>
-        <Link href="/access" className="mt-6 inline-block text-emerald-800 underline">
-          Access a record
+        <Link
+          href="/access"
+          className="mt-7 inline-flex h-11 items-center justify-center rounded-xl bg-glow px-5 text-[15px] font-semibold text-glow-ink"
+        >
+          Look up a record
         </Link>
-      </main>
+      </div>
     );
   }
 
-  if (!referral) return <p className="p-6 text-center text-gray-500">Loading referral…</p>;
+  if (!referral) return <p className="text-[14px] text-mist-faint">Loading referral…</p>;
 
   const groups = groupByScope(referral.items);
 
   return (
-    <main className="mx-auto max-w-xl px-6 py-10">
-      <p className="text-xs font-semibold uppercase tracking-widest text-emerald-800">Referral</p>
-      <h1 className="mt-1 text-3xl font-bold text-gray-900">{referral.patient.name}</h1>
-      <p className="mt-1 text-sm text-gray-500">MedRekk Code {referral.patient.medrekkCode}</p>
+    <div className="mx-auto max-w-[680px]">
+      <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.09] bg-white/[0.04] px-3 py-1.5">
+        <span className="h-1.5 w-1.5 rounded-full bg-glow" />
+        <span className="text-[12.5px] font-semibold text-mist-dim">Referral</span>
+      </span>
+      <h1 className="mt-5 font-display text-[34px] font-bold leading-[1.1] tracking-[-0.03em] text-mist">
+        {referral.patient.name}
+      </h1>
+      <p className="mt-2 font-mono text-[13px] tracking-[0.14em] text-mist-dim">{referral.patient.medrekkCode}</p>
 
-      <p className="mt-3 text-sm text-gray-600">
+      <p className="mt-4 text-[14px] leading-[1.65] text-mist-dim">
         Issued by {referral.issuedBy.name}
         {referral.issuedBy.role === "PATIENT" ? " (the patient)" : " (health worker)"}
         {referral.originatingFacility ? `, ${referral.originatingFacility}` : ""}
         {referral.destinationFacility ? `, for ${referral.destinationFacility}` : ""}
       </p>
 
-      <section className="mt-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Reason for referral</h2>
-        <p className="mt-2 text-lg font-medium text-gray-900">{referral.reason}</p>
-        {referral.note ? <p className="mt-2 text-sm text-gray-700">{referral.note}</p> : null}
+      <section className="mt-8 rounded-2xl border border-white/[0.07] bg-white/[0.035] p-5">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-mist-faint">Reason for referral</h2>
+        <p className="mt-2.5 text-[18px] font-semibold leading-[1.4] tracking-[-0.01em] text-mist">
+          {referral.reason}
+        </p>
+        {referral.note ? (
+          <p className="mt-2.5 text-[14px] leading-[1.65] text-mist-dim">{referral.note}</p>
+        ) : null}
       </section>
 
       {groups.map(([scope, items]) => (
-        <section key={scope} className="mt-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+        <section key={scope} className="mt-7">
+          <h2 className="text-[11px] font-bold uppercase tracking-[0.14em] text-mist-faint">
             {SCOPE_TITLES[scope] ?? scope}
           </h2>
-          <ul className="mt-2 space-y-2">
+          <ul className="mt-3 grid gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.07]">
             {items.map((item) => (
-              <li key={item.claimId} className="rounded-lg bg-gray-50 px-3 py-2">
-                <p className="text-base font-medium text-gray-900">{item.value}</p>
+              <li key={item.claimId} className="flex flex-wrap items-center justify-between gap-3 bg-night px-4 py-3.5">
+                <p className="text-[15px] font-semibold tracking-[-0.01em] text-mist">{item.value}</p>
                 <span
-                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-                    ITEM_STATUS_CLASS[item.status] ?? "bg-gray-200 text-gray-700"
+                  className={`rounded-full px-2.5 py-1 text-[11.5px] font-semibold ${
+                    ITEM_STATUS_CLASS[item.status] ?? "bg-white/[0.07] text-mist-dim"
                   }`}
                 >
                   {ITEM_STATUS_TEXT[item.status] ?? item.status}
@@ -103,27 +116,29 @@ export default function ReferralPage() {
         </section>
       ))}
 
-      <p className="mt-8 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
-        This referral shows only what the patient chose to attach. It is not their full record. Information marked
-        self-reported has not been checked by a clinician.
-      </p>
-
-      <div className="mt-6">
-        <Link
-          href={`/access?code=${encodeURIComponent(referral.patient.medrekkCode)}`}
-          className="inline-block rounded-xl bg-emerald-800 px-5 py-3 font-semibold text-white"
-        >
-          Request more history
-        </Link>
-        <p className="mt-2 text-xs text-gray-500">
-          The patient will be asked to approve exactly what you request, and for how long.
+      <div className="mt-8 rounded-2xl border border-amber-400/20 bg-amber-400/[0.07] p-4">
+        <p className="text-[14px] leading-[1.65] text-amber-100/90">
+          This is only what the patient chose to attach — not their record. Anything marked self-reported has not
+          been checked by a clinician.
         </p>
       </div>
 
-      <p className="mt-10 text-xs text-gray-400">
+      <div className="mt-8">
+        <Link
+          href={`/access?code=${encodeURIComponent(referral.patient.medrekkCode)}`}
+          className="inline-flex h-12 items-center justify-center rounded-xl bg-glow px-5 text-[15px] font-semibold text-glow-ink transition-colors hover:bg-[#3ad3a0]"
+        >
+          Ask for more history
+        </Link>
+        <p className="mt-2.5 text-[13px] leading-[1.6] text-mist-faint">
+          The patient is asked to approve exactly what you request, and for how long.
+        </p>
+      </div>
+
+      <p className="mt-10 border-t border-white/[0.07] pt-5 text-[12.5px] leading-[1.7] text-mist-faint">
         Issued {new Date(referral.createdAt).toLocaleDateString()}. Expires{" "}
         {new Date(referral.expiresAt).toLocaleDateString()}. This view was logged and is visible to the patient.
       </p>
-    </main>
+    </div>
   );
 }

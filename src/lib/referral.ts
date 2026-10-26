@@ -34,9 +34,13 @@ export const ITEM_STATUS_TEXT: Record<string, string> = {
   CLINICALLY_VERIFIED: "Clinically verified",
 };
 
+/**
+ * How an item got here, as a tint on the night surface. The same four standings the app uses,
+ * so a referral read in a browser says exactly what the record on the phone says.
+ */
 export const ITEM_STATUS_CLASS: Record<string, string> = {
-  UNVERIFIED: "bg-gray-200 text-gray-700",
-  SELF_REPORTED: "bg-amber-100 text-amber-900",
-  EVIDENCE_BACKED: "bg-blue-100 text-blue-900",
-  CLINICALLY_VERIFIED: "bg-emerald-100 text-emerald-900",
+  UNVERIFIED: "bg-white/[0.07] text-mist-dim",
+  SELF_REPORTED: "bg-amber-400/[0.12] text-amber-200",
+  EVIDENCE_BACKED: "bg-sky-400/[0.12] text-sky-200",
+  CLINICALLY_VERIFIED: "bg-glow/[0.14] text-glow",
 };

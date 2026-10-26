@@ -1,10 +1,25 @@
 import { Suspense } from "react";
+
+import { NightFooter, NightHeader } from "@/components/night-chrome";
+import { NightShell, Wrap } from "@/components/night";
 import Pending from "./Pending";
+
+export const metadata = {
+  title: "Waiting for the patient",
+};
 
 export default function Page() {
   return (
-    <Suspense fallback={<p className="p-6 text-gray-500">Loading…</p>}>
-      <Pending />
-    </Suspense>
+    <NightShell>
+      <NightHeader />
+      <main className="relative flex-1 py-12 lg:py-16">
+        <Wrap className="relative">
+          <Suspense fallback={<p className="text-[14px] text-mist-faint">Loading…</p>}>
+            <Pending />
+          </Suspense>
+        </Wrap>
+      </main>
+      <NightFooter />
+    </NightShell>
   );
 }

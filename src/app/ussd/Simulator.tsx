@@ -105,44 +105,29 @@ export default function Simulator() {
   const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"];
 
   return (
-    <main
-      className="min-h-screen font-sans"
-      style={{ background: "#E4E6E3", color: "#1C1F1D" }}
-    >
-      <div className="mx-auto max-w-5xl px-6 py-12">
-        <p className="text-sm font-semibold" style={{ color: "#0F6E56" }}>
-          MedRekk
-        </p>
-        <h1 className="mt-2 text-3xl font-bold">Dial-in simulator</h1>
-        <p className="mt-3 max-w-[64ch] text-[15px] leading-relaxed text-gray-700">
-          This keypad sends the same request a mobile network aggregator sends when somebody dials MedRekk&apos;s
-          short code from a feature phone. The replies come from the live service, not from this page. A patient
-          needs no smartphone, no app and no internet — only a handset that can dial.
+    <div className="grid gap-10 lg:grid-cols-[340px_1fr] lg:gap-14">
+      {/* ---- The handset ---- */}
+      <div>
+        <label className="block text-[13px] font-semibold text-mist" htmlFor="msisdn">
+          This handset&apos;s number
+        </label>
+        <input
+          id="msisdn"
+          value={msisdn}
+          onChange={(e) => setMsisdn(e.target.value)}
+          disabled={phase !== "IDLE"}
+          placeholder="08031234567"
+          inputMode="tel"
+          className="mt-2 w-full rounded-xl border border-white/[0.09] bg-white/[0.04] px-3.5 py-2.5 text-[15px] text-mist placeholder:text-mist-faint/70 focus:border-glow/40 focus:outline-none disabled:opacity-50"
+        />
+        <p className="mt-2 text-[12.5px] leading-[1.6] text-mist-faint">
+          The number must already be on a MedRekk account, with a PIN set in the app.
         </p>
 
-        <div className="mt-10 grid gap-10 lg:grid-cols-[320px_1fr]">
-          {/* ---- The handset ---- */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700" htmlFor="msisdn">
-              This handset&apos;s number
-            </label>
-            <input
-              id="msisdn"
-              value={msisdn}
-              onChange={(e) => setMsisdn(e.target.value)}
-              disabled={phase !== "IDLE"}
-              placeholder="08031234567"
-              inputMode="tel"
-              className="mt-1 w-full rounded-lg border border-gray-400 bg-white px-3 py-2 text-base disabled:bg-gray-100 disabled:text-gray-500"
-            />
-            <p className="mt-1 text-xs text-gray-600">
-              The number must already be on a MedRekk account, with a PIN set in the app.
-            </p>
-
-            <div
-              className="mt-5 rounded-[28px] p-4 shadow-lg"
-              style={{ background: "#2A2E2B" }}
-            >
+        {/* The handset keeps its own colours. It is a physical object being depicted, not a
+            piece of site chrome, and a grey-green Nokia on a dark page reads better than it
+            ever did on a grey one. */}
+        <div className="mt-5 rounded-[28px] p-4 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)]" style={{ background: "#2A2E2B" }}>
               {/* LCD */}
               <div
                 className="rounded-[6px] px-3 py-3 font-mono text-[13px] leading-[1.45]"
@@ -211,54 +196,56 @@ export default function Simulator() {
             </div>
           </div>
 
-          {/* ---- Session transcript ---- */}
-          <div>
-            <h2 className="text-lg font-semibold">Session</h2>
-            <p className="mt-1 max-w-[62ch] text-sm text-gray-700">
-              Every line below is one POST to <span className="font-mono">/ussd</span>. The{" "}
-              <span className="font-mono">text</span> field accumulates what has been typed so far, separated by
-              asterisks — that is how USSD carries a session. Your PIN is hidden here, since this screen may be on
-              a projector.
+      {/* ---- Session transcript ---- */}
+      <div>
+        <h2 className="text-[20px] font-semibold tracking-[-0.01em] text-mist">Session</h2>
+        <p className="mt-2 max-w-[62ch] text-[14px] leading-[1.65] text-mist-dim">
+          Every line below is one POST to <span className="font-mono text-mist">/ussd</span>. The{" "}
+          <span className="font-mono text-mist">text</span> field accumulates what has been typed so far,
+          separated by asterisks — that is how USSD carries a session. Your PIN is hidden here, since this screen
+          may be on a projector.
+        </p>
+
+        {log.length === 0 ? (
+          <div className="mt-6 rounded-2xl border border-dashed border-white/[0.12] p-8 text-center">
+            <p className="text-[14px] font-medium text-mist">Nothing dialled yet</p>
+            <p className="mx-auto mt-1.5 max-w-[34ch] text-[13px] leading-[1.6] text-mist-faint">
+              Put a number in, press Dial, and every request and reply appears here as it happens.
             </p>
+          </div>
+        ) : (
+          <ol className="mt-5 space-y-4">
+            {log.map((entryLog, index) => (
+              <li key={index} className="border-l-2 border-white/[0.12] pl-4">
+                <p className="font-mono text-[11.5px] text-mist-faint">
+                  text={entryLog.sent === "" ? "(empty)" : entryLog.sent}
+                </p>
+                <pre
+                  className={`mt-1.5 whitespace-pre-wrap break-words font-mono text-[13px] leading-relaxed ${
+                    entryLog.ended ? "text-rose-300" : "text-mist"
+                  }`}
+                >
+                  {entryLog.got}
+                </pre>
+              </li>
+            ))}
+          </ol>
+        )}
 
-            {log.length === 0 ? (
-              <p className="mt-6 text-sm text-gray-600">
-                Nothing dialled yet. Enter a number and press Dial.
-              </p>
-            ) : (
-              <ol className="mt-5 space-y-4">
-                {log.map((entryLog, index) => (
-                  <li key={index} className="border-l-2 pl-4" style={{ borderColor: "#B9BDB7" }}>
-                    <p className="font-mono text-xs text-gray-600">
-                      text={entryLog.sent === "" ? "(empty)" : entryLog.sent}
-                    </p>
-                    <pre
-                      className="mt-1 whitespace-pre-wrap break-words font-mono text-[13px] leading-relaxed"
-                      style={{ color: entryLog.ended ? "#7A2E2E" : "#1C1F1D" }}
-                    >
-                      {entryLog.got}
-                    </pre>
-                  </li>
-                ))}
-              </ol>
-            )}
-
-            <div className="mt-10 max-w-[62ch] border-t pt-6 text-sm leading-relaxed text-gray-700" style={{ borderColor: "#C8CCC6" }}>
-              <h3 className="font-semibold text-gray-900">What a dialled session can read</h3>
-              <p className="mt-2">
+        <div className="mt-10 max-w-[62ch] border-t border-white/[0.08] pt-6 text-[14px] leading-[1.7] text-mist-dim">
+          <h3 className="text-[15px] font-semibold text-mist">What a dialled session can read</h3>
+          <p className="mt-2.5">
                 Only the emergency card and the MedRekk Code. Text sent over a dialled code crosses the mobile
                 network unencrypted, and whoever stands near the handset can read the screen, so the full record
                 stays behind the patient&apos;s approval in the app. Five wrong PINs lock dialling for fifteen
                 minutes, and every read is written to the patient&apos;s access log.
               </p>
-              <p className="mt-3">
-                A short code on a live Nigerian network is a commercial and regulatory step, not an engineering
-                one. This simulator and the service behind it are the engineering.
-              </p>
-            </div>
-          </div>
+          <p className="mt-3.5">
+            A short code on a live Nigerian network is a commercial and regulatory step, not an engineering one.
+            This simulator and the service behind it are the engineering.
+          </p>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

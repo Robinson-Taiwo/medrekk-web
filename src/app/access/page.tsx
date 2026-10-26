@@ -1,88 +1,104 @@
-"use client";
+import { NightFooter, NightHeader } from "@/components/night-chrome";
+import { Aura, Body, Display, Heading, NightShell, Panel, Wrap } from "@/components/night";
+import { Reveal } from "@/components/reveal";
+import LookupForm from "./LookupForm";
 
-import { useRouter } from "next/navigation";
-import { useState, useSyncExternalStore } from "react";
-import { api } from "@/lib/api";
-import type { LookupResponse } from "@/lib/types";
+export const metadata = {
+  title: "Access a record",
+  description:
+    "Find a patient's record with their MedRekk code and name, then ask them for access. They decide what you see and for how long.",
+};
 
-const cleanCode = (raw: string): string => raw.toUpperCase().replace(/[^A-Z0-9-]/g, "").slice(0, 20);
-
-const subscribe = (): (() => void) => () => {};
-const readCodeFromLink = (): string => cleanCode(new URLSearchParams(window.location.search).get("code") ?? "");
-const readCodeOnServer = (): string => "";
+/**
+ * What happens after Continue, said before it is pressed.
+ *
+ * The page used to be a heading, two fields and a button on an empty white field — which
+ * tells a clinician standing in front of a patient nothing about what they are about to set
+ * in motion, or why nothing has appeared yet when they wait for it. Access here is somebody
+ * else's decision, and a form that does not say so reads as broken when it does not
+ * immediately produce a record.
+ */
+const STEPS = [
+  {
+    n: "01",
+    title: "Find the record",
+    body: "Their MedRekk code and the name on the record. Both have to match — a code alone finds nothing.",
+  },
+  {
+    n: "02",
+    title: "Say what you need",
+    body: "Name yourself, your facility and your reason, and pick only the parts of the record you need.",
+  },
+  {
+    n: "03",
+    title: "They decide",
+    body: "The request goes to their phone. They can approve less than you asked for, and end it whenever they like.",
+  },
+];
 
 export default function AccessLookupPage() {
-  const router = useRouter();
-  const fromLink = useSyncExternalStore(subscribe, readCodeFromLink, readCodeOnServer);
-  const [typed, setTyped] = useState<string | null>(null);
-  const code = typed ?? fromLink;
-  const [name, setName] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const submit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    if (busy) return;
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await api<LookupResponse>("/access/lookup", {
-        body: { medrekkCode: code.trim(), patientName: name.trim() },
-      });
-      try {
-        sessionStorage.setItem(
-          `medrekk:${res.session}`,
-          JSON.stringify({ patientName: res.patientName, medrekkCode: res.medrekkCode }),
-        );
-      } catch {
-        // Storage is a convenience only; the next page works without it.
-      }
-      router.push(`/access/${res.session}`);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
-      setBusy(false);
-    }
-  };
-
   return (
-    <main className="mx-auto max-w-md px-6 py-16">
-      <h1 className="text-3xl font-bold text-gray-900">Access a medical record</h1>
-      <p className="mt-2 text-gray-600">
-        Ask the patient for their MedRekk Code and use their full name. A code and name find a record; they do not
-        grant access. The patient must approve.
-      </p>
-      <form onSubmit={(e) => void submit(e)} className="mt-8 flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
-          MedRekk Code
-          <input
-            value={code}
-            onChange={(e) => setTyped(cleanCode(e.target.value))}
-            placeholder="MRK-82941"
-            autoCapitalize="characters"
-            required
-            className="rounded-xl border border-gray-300 px-4 py-3 text-base uppercase tracking-widest text-gray-900"
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm font-medium text-gray-700">
-          Patient name
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Amaka Okafor"
-            required
-            minLength={2}
-            className="rounded-xl border border-gray-300 px-4 py-3 text-base text-gray-900"
-          />
-        </label>
-        {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-xl bg-[#0F6E56] py-3 font-semibold text-white disabled:opacity-60"
-        >
-          {busy ? "Looking up..." : "Continue"}
-        </button>
-      </form>
-    </main>
+    <NightShell>
+      <NightHeader />
+
+      <main className="relative flex-1">
+        <Aura className="left-1/2 top-[-8rem] h-[26rem] w-[40rem] -translate-x-1/2 opacity-40" />
+        <Wrap className="relative py-14 lg:py-20">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-16">
+            <div>
+              <Reveal>
+                <Display className="max-w-[16ch]">Ask for a record. The patient answers.</Display>
+                <Body className="mt-5 max-w-[52ch]">
+                  You do not need an account to read a record somebody has approved. A code and a name find it;
+                  only the patient can open it.
+                </Body>
+              </Reveal>
+
+              <Reveal>
+                <ol className="mt-10 grid gap-3">
+                  {STEPS.map((step) => (
+                    <li key={step.n}>
+                      <Panel className="flex gap-4 p-5">
+                        <span className="font-mono text-[13px] tabular-nums text-glow">{step.n}</span>
+                        <span className="min-w-0">
+                          <span className="block text-[15px] font-semibold text-mist">{step.title}</span>
+                          <span className="mt-1 block text-[14px] leading-[1.6] text-mist-dim">{step.body}</span>
+                        </span>
+                      </Panel>
+                    </li>
+                  ))}
+                </ol>
+              </Reveal>
+
+              <Reveal>
+                <p className="mt-8 max-w-[52ch] text-[13px] leading-[1.7] text-mist-faint">
+                  Every lookup, request and view is written into the patient&rsquo;s own access log, with your name
+                  and your reason on it. In an emergency, a responder can read the patient&rsquo;s emergency card
+                  without any of this —{" "}
+                  <a className="text-mist underline underline-offset-4" href="/emergency">
+                    that is a separate door
+                  </a>
+                  , and it is logged too.
+                </p>
+              </Reveal>
+            </div>
+
+            <div className="lg:pt-2">
+              <Reveal>
+                <div className="glass rounded-2xl p-6">
+                  <Heading className="text-[20px]">Find the record</Heading>
+                  <Body className="mt-2 text-[14px]">Ask the patient for both.</Body>
+                  <div className="mt-6">
+                    <LookupForm />
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </Wrap>
+      </main>
+
+      <NightFooter />
+    </NightShell>
   );
 }
