@@ -7,11 +7,15 @@ import { useState } from "react";
 import { Logo, Mark } from "./brand";
 import { KeyChip, NightLink, Wrap } from "./night";
 
+/** Where the technical documentation lives. Off-site, so every link to it is a plain anchor. */
+export const DOCS_URL = "https://medrekk.mintlify.site";
+
 const NAV = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/for-providers", label: "For providers" },
   { href: "/ussd", label: "Dial-in" },
   { href: "/download", label: "Get the app" },
+  { href: DOCS_URL, label: "Docs", external: true },
 ] as const;
 
 /**
@@ -60,15 +64,28 @@ export function NightHeader() {
           </Link>
 
           <nav aria-label="Main" className="hidden flex-1 items-center justify-center gap-1 lg:flex">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-lg px-3 py-2 text-[14px] font-medium text-mist-dim transition-colors hover:text-mist"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV.map((item) =>
+              "external" in item && item.external ? (
+                // next/link exists to move between pages of this app without a page load. The
+                // documentation is a different site, so there is nothing for a router to route.
+                <a
+                  key={item.href}
+                  href={item.href}
+                  rel="noopener"
+                  className="rounded-lg px-3 py-2 text-[14px] font-medium text-mist-dim transition-colors hover:text-mist"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-lg px-3 py-2 text-[14px] font-medium text-mist-dim transition-colors hover:text-mist"
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
           </nav>
 
           <div className="ml-auto flex items-center gap-2 lg:ml-0">
@@ -152,16 +169,28 @@ export function NightHeader() {
             aria-label="Main"
             className="mt-2 overflow-hidden rounded-[18px] border border-white/[0.08] bg-night/95 p-2 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.95)] backdrop-blur-xl lg:hidden"
           >
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMenuOpen(false)}
-                className="block rounded-xl px-3 py-3 text-[15px] font-medium text-mist-dim transition-colors hover:bg-white/[0.05] hover:text-mist"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV.map((item) =>
+              "external" in item && item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  rel="noopener"
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-xl px-3 py-3 text-[15px] font-medium text-mist-dim transition-colors hover:bg-white/[0.05] hover:text-mist"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="block rounded-xl px-3 py-3 text-[15px] font-medium text-mist-dim transition-colors hover:bg-white/[0.05] hover:text-mist"
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
             <div className="my-1.5 h-px bg-white/[0.07]" />
             <Link
               href="/access"
@@ -218,6 +247,13 @@ export function NightFooter() {
       ],
     },
     {
+      heading: "Developers",
+      links: [
+        { href: DOCS_URL, label: "Documentation", external: true },
+        { href: "https://github.com/Robinson-Taiwo/medrekk", label: "GitHub", external: true },
+      ],
+    },
+    {
       heading: "Legal",
       links: [{ href: "/privacy", label: "Privacy" }],
     },
@@ -242,15 +278,26 @@ export function NightFooter() {
           {columns.map((column) => (
             <nav key={column.heading} aria-label={column.heading} className="grid content-start gap-3">
               <p className="text-[13px] font-semibold text-mist">{column.heading}</p>
-              {column.links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-[13px] text-mist-faint transition-colors hover:text-mist"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {column.links.map((link) =>
+                "external" in link && link.external ? (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    rel="noopener"
+                    className="text-[13px] text-mist-faint transition-colors hover:text-mist"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="text-[13px] text-mist-faint transition-colors hover:text-mist"
+                  >
+                    {link.label}
+                  </Link>
+                ),
+              )}
             </nav>
           ))}
         </div>
