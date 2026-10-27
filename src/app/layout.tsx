@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
@@ -86,7 +87,16 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+/*
+ * Typed explicitly rather than with Next's generated `LayoutProps<"/">`.
+ *
+ * That type is written into .next/types during a build, so it exists on a machine that has run
+ * the dev server and does not exist on a fresh clone — which is every CI run. `tsc --noEmit`
+ * therefore passed locally and failed in the pipeline with "Cannot find name 'LayoutProps'".
+ * A root layout takes children and nothing else, so saying so costs nothing and depends on
+ * nothing.
+ */
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
