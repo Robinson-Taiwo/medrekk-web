@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# medrekk-web
 
-## Getting Started
+The web half of **MedRekk**, an offline-first, patient-owned medical record.
 
-First, run the development server:
+This is where everyone without the app arrives: a clinician reading a record the patient approved,
+a responder looking up an emergency card from a scanned QR, a patient trying the dial-in flow, and
+an administrator approving health-worker credentials.
+
+**Live:** https://medrekk-web.rumptycloud.app
+**Documentation:** [the MedRekk docs](https://github.com/Robinson-Taiwo/medrekk/tree/main/docs)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set `NEXT_PUBLIC_API_URL` to a running [`medrekk-backend`](https://github.com/Robinson-Taiwo/medrekk-backend).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Route | For |
+| --- | --- |
+| `/` | What MedRekk is |
+| `/download` | Install the Android app |
+| `/access`, `/access/[session]/record` | A clinician requesting and reading an approved record |
+| `/emergency`, `/emergency/[identifier]` | Emergency card lookup — no account needed |
+| `/ussd` | A working simulator of the dial-in flow |
+| `/referral/[shareId]` | A shared referral |
+| `/admin` | Health-worker credential approval |
 
-## Learn More
+## Environment
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Notes |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | The backend |
+| `NEXT_PUBLIC_SITE_URL` | This deployment. Without it, link previews fall back to a bare URL |
+| `NEXT_PUBLIC_APK_URL` | The EAS install link. Absent, the download card says "not published yet" |
+| `NEXT_PUBLIC_APK_VERSION` | Optional, e.g. `v1.0.0` |
+| `NEXT_PUBLIC_USSD_CODE` | Shown in the dial-in simulator |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Next.js 16 (App Router), React 19, Tailwind v4. Server components unless a page needs state.
+`src/components/night.tsx` holds the primitives; `phone.tsx` renders the app mockups in the same
+tokens the app uses, so they cannot drift out of step with it.
 
-## Deploy on Vercel
+## The other repositories
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [`medrekk`](https://github.com/Robinson-Taiwo/medrekk) — the mobile app, and the documentation
+- [`medrekk-backend`](https://github.com/Robinson-Taiwo/medrekk-backend) — API, consent, audit trail
