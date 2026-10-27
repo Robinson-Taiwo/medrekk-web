@@ -158,6 +158,53 @@
   }
 }
 
+/* A ring emptying as a grant runs down. Paired with stroke-dasharray on the circle. */
+@keyframes medrekk-ring {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: var(--ring-length);
+  }
+}
+
+/*
+ * A light passing across the code once in a while.
+ *
+ * The MedRekk code is the one string on the page a visitor has to recognise again later, so it
+ * gets the only moving highlight on the surface — enough to draw the eye back to it, slow enough
+ * not to be a distraction while reading the rest.
+ */
+@keyframes medrekk-sweep {
+  0%,
+  62% {
+    transform: translateX(-110%);
+  }
+  88%,
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+/* Scopes lighting up one after another, as a grant is agreed item by item. */
+@keyframes medrekk-admit {
+  0%,
+  8% {
+    opacity: 0.3;
+    border-color: rgb(255 255 255 / 0.07);
+  }
+  18%,
+  86% {
+    opacity: 1;
+    border-color: rgb(47 190 143 / 0.35);
+  }
+  96%,
+  100% {
+    opacity: 0.3;
+    border-color: rgb(255 255 255 / 0.07);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

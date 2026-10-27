@@ -12,7 +12,7 @@ import {
   Wrap,
 } from "@/components/night";
 import { Reveal } from "@/components/reveal";
-import { HeroSurface, OfflineCapture, PillarIcon } from "@/components/illustration";
+import { AccessLifecycle, HeroSurface, OfflineCapture, PillarIcon } from "@/components/illustration";
 import { AccessRequestScreen, HomeScreen, Phone, VisitScreen } from "@/components/phone";
 import { DownloadCard } from "@/components/download";
 
@@ -58,10 +58,17 @@ export default function Home() {
               </Reveal>
 
               <Reveal delay={180}>
+                {/*
+                  The app first, the reader second.
+                  
+                  Most people reaching this page are patients, and the thing they need is on
+                  their phone; a clinician arrives with a code and a reason, and will find the
+                  reader whether or not it is the brightest button on the page.
+                */}
                 <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                  <NightLink href="/access">Access a record</NightLink>
-                  <NightLink href="/how-it-works" variant="ghost">
-                    See how it works
+                  <NightLink href="/download">Download the app</NightLink>
+                  <NightLink href="/access" variant="ghost">
+                    Access a record
                   </NightLink>
                 </div>
               </Reveal>
@@ -225,6 +232,11 @@ export default function Home() {
               <Heading className="mx-auto max-w-[22ch]">
                 A history that follows the patient, not the hospital.
               </Heading>
+
+              {/* The closing block was the one section on the page carrying no picture at all. */}
+              <div className="mx-auto mt-10 max-w-[30rem]">
+                <AccessLifecycle />
+              </div>
               <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <NightLink href="/access">Access a record</NightLink>
                 <NightLink href="/emergency" variant="ghost">

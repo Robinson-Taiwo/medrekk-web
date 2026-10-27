@@ -315,18 +315,52 @@ export function PillarIcon({ name }: { name: "offline" | "approval" | "log" }) {
  * card sitting inside it rather than floating on its own. It is wide enough to anchor the
  * page, which a single narrow phone card never is.
  */
+/** Circumference of the countdown ring. Shared by the dash array and the keyframe variable. */
+const RING_R = 52;
+const RING_LENGTH = 2 * Math.PI * RING_R;
+
+/**
+ * The grant, running down in front of you.
+ *
+ * The number is the point. A countdown is the one part of this product that a person
+ * understands without being told anything — access that stops on its own, visibly, is the whole
+ * promise in a single moving object — so it is drawn large and allowed to move, while everything
+ * else on the surface holds still.
+ */
+function GrantRing() {
+  return (
+    <div className="relative grid place-items-center">
+      <svg viewBox="0 0 120 120" className="h-[136px] w-[136px] -rotate-90">
+        <circle cx="60" cy="60" r={RING_R} fill="none" stroke="rgb(255 255 255 / 0.07)" strokeWidth="6" />
+        <circle
+          cx="60"
+          cy="60"
+          r={RING_R}
+          fill="none"
+          stroke="#2FBE8F"
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeDasharray={RING_LENGTH}
+          style={{
+            ["--ring-length" as string]: `${RING_LENGTH}`,
+            animation: "medrekk-ring 9s linear infinite",
+          }}
+        />
+      </svg>
+      <div className="absolute text-center leading-none">
+        <p className="font-display text-[30px] font-extrabold tracking-[-0.03em] text-mist">2:40</p>
+        <p className="mt-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-mist-faint">left</p>
+      </div>
+    </div>
+  );
+}
+
 export function HeroSurface() {
-  const sections = [
-    { label: "Allergies", value: "1", hint: "Penicillin" },
-    { label: "Medicines", value: "2", hint: "Current" },
-    { label: "Test results", value: "3", hint: "Last: 12 Oct" },
-    { label: "Past conditions", value: "2", hint: "Confirmed" },
-    { label: "Recent visits", value: "4", hint: "Ilorin General" },
-  ];
+  const scopes = ["Allergies", "Medicines", "Test results", "Conditions", "Visits"];
 
   return (
-    <div className="glass overflow-hidden rounded-[22px]">
-      {/* Window bar. Identity on the left, state on the right — the two things that matter. */}
+    <div className="glass overflow-hidden rounded-[24px]">
+      {/* Identity on the left, state on the right — the two things that matter. */}
       <div className="flex items-center justify-between gap-4 border-b border-white/[0.07] px-5 py-3.5">
         <div className="flex items-center gap-3">
           <span className="grid h-7 w-7 place-items-center rounded-lg bg-glow/15 text-[11px] font-semibold text-glow">
@@ -334,34 +368,78 @@ export function HeroSurface() {
           </span>
           <div className="leading-tight">
             <p className="text-[13px] font-medium text-mist">Amaka Okafor</p>
-            <p className="font-mono text-[11px] tracking-[0.1em] text-mist-faint">MR-4K7Q</p>
+            <p className="text-[11px] text-mist-faint">Ilorin General · today</p>
           </div>
         </div>
         <span className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.04] px-2.5 py-1 text-[11px] font-medium text-mist-dim">
-          <span className="h-1.5 w-1.5 rounded-full bg-glow" />
+          <span className="h-1.5 w-1.5 rounded-full bg-glow" style={{ animation: "medrekk-pulse 2.4s ease-in-out infinite" }} />
           Available offline
         </span>
       </div>
 
-      <div className="grid gap-5 p-5 lg:grid-cols-[1.05fr_0.95fr]">
-        <ul className="grid content-start gap-1.5">
-          {sections.map((section) => (
-            <li
-              key={section.label}
-              className="flex items-center gap-3 rounded-xl border border-transparent px-3 py-2.5 transition-colors hover:border-white/[0.07] hover:bg-white/[0.03]"
-            >
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] border border-white/[0.07] bg-white/[0.04] font-mono text-[12px] font-semibold text-mist-dim">
-                {section.value}
-              </span>
-              <span className="flex-1 text-[14px] text-mist">{section.label}</span>
-              <span className="text-[12px] text-mist-faint">{section.hint}</span>
-            </li>
-          ))}
-        </ul>
+      <div className="grid items-center gap-8 p-6 sm:p-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-mist-faint">MedRekk code</p>
 
-        <div className="lg:pl-1">
-          <AccessLifecycle />
+          {/* The code, with a light crossing it. Overflow hidden so the sweep is clipped to it. */}
+          <div className="relative mt-3 overflow-hidden">
+            <p className="font-display text-[clamp(2.6rem,7vw,4.2rem)] font-extrabold leading-none tracking-[0.04em] text-mist">
+              MR&ndash;4K7Q
+            </p>
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-glow/20 to-transparent"
+              style={{ animation: "medrekk-sweep 7s ease-in-out infinite" }}
+            />
+          </div>
+
+          <p className="mt-5 max-w-[34ch] text-[14px] leading-[1.6] text-mist-dim">
+            One code. The whole history travels with the patient, not the hospital.
+          </p>
+
+          {/* Approved item by item, which is what the staggered delays are saying. */}
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {scopes.map((scope, i) => (
+              <li
+                key={scope}
+                className="rounded-full border bg-white/[0.03] px-3 py-1.5 text-[12.5px] font-medium text-mist"
+                style={{
+                  animation: "medrekk-admit 9s ease-in-out infinite",
+                  animationDelay: `${i * 0.5}s`,
+                }}
+              >
+                {scope}
+              </li>
+            ))}
+          </ul>
         </div>
+
+        <div className="flex flex-col items-center gap-5 rounded-[20px] border border-white/[0.07] bg-white/[0.025] p-6">
+          <GrantRing />
+          <div className="text-center">
+            <p className="text-[14px] font-semibold text-mist">Dr A. Bello</p>
+            <p className="mt-1 text-[12px] text-mist-faint">Reading 5 of 5 approved areas</p>
+          </div>
+          <p className="rounded-xl bg-white/[0.04] px-3.5 py-2.5 text-center text-[12px] leading-[1.5] text-mist-dim">
+            Ends on its own.
+            <br />
+            No one has to remember.
+          </p>
+        </div>
+      </div>
+
+      {/* The three claims, as a strip rather than a paragraph. */}
+      <div className="grid divide-y divide-white/[0.07] border-t border-white/[0.07] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        {[
+          { k: "Works with", v: "no network" },
+          { k: "Every look", v: "written down" },
+          { k: "Access ends", v: "by itself" },
+        ].map((item) => (
+          <div key={item.k} className="px-5 py-4">
+            <p className="text-[11px] uppercase tracking-[0.12em] text-mist-faint">{item.k}</p>
+            <p className="mt-1 text-[15px] font-semibold text-mist">{item.v}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

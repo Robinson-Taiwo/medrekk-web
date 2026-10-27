@@ -28,6 +28,7 @@ const NAV = [
  */
 export function NightHeader() {
   const [code, setCode] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
   const go = (e: React.SyntheticEvent): void => {
@@ -104,11 +105,87 @@ export function NightHeader() {
             >
               Sign in
             </Link>
-            <NightLink href="/access" className="shrink-0 !h-10 !px-4 !text-[14px]">
-              Access a record
+
+            {/*
+              The bar's one button is the app, not the record reader.
+              
+              "Access a record" was here because it is what a clinician does — but a clinician
+              arrives with a code in hand and goes straight there, while everybody else landing
+              on this page is a patient who needs the app first. A header has room for one
+              action, and it should be the one most visitors need.
+            */}
+            <NightLink href="/download" className="hidden shrink-0 !h-10 !px-4 !text-[14px] sm:inline-flex">
+              Get the app
             </NightLink>
+
+            {/*
+              Below lg the centre nav is hidden, and until now nothing replaced it: every link
+              except the one button was simply unreachable on a phone — on a site whose whole
+              subject is phones.
+            */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-white/[0.09] bg-white/[0.04] text-mist transition-colors hover:bg-white/[0.08] lg:hidden"
+            >
+              <svg viewBox="0 0 20 20" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                {menuOpen ? (
+                  <path d="M5 5l10 10M15 5L5 15" />
+                ) : (
+                  <>
+                    <path d="M3 6h14" />
+                    <path d="M3 10h14" />
+                    <path d="M3 14h14" />
+                  </>
+                )}
+              </svg>
+            </button>
           </div>
         </div>
+
+        {menuOpen ? (
+          <nav
+            id="mobile-nav"
+            aria-label="Main"
+            className="mt-2 overflow-hidden rounded-[18px] border border-white/[0.08] bg-night/95 p-2 shadow-[0_24px_60px_-28px_rgba(0,0,0,0.95)] backdrop-blur-xl lg:hidden"
+          >
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="block rounded-xl px-3 py-3 text-[15px] font-medium text-mist-dim transition-colors hover:bg-white/[0.05] hover:text-mist"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="my-1.5 h-px bg-white/[0.07]" />
+            <Link
+              href="/access"
+              onClick={() => setMenuOpen(false)}
+              className="block rounded-xl px-3 py-3 text-[15px] font-medium text-mist-dim transition-colors hover:bg-white/[0.05] hover:text-mist"
+            >
+              Access a record
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="block rounded-xl px-3 py-3 text-[15px] font-medium text-mist-dim transition-colors hover:bg-white/[0.05] hover:text-mist"
+            >
+              Sign in
+            </Link>
+            <NightLink
+              href="/download"
+              onClick={() => setMenuOpen(false)}
+              className="mt-1.5 !flex w-full justify-center"
+            >
+              Get the app
+            </NightLink>
+          </nav>
+        ) : null}
       </Wrap>
       </div>
     </header>
